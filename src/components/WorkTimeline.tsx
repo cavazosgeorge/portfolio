@@ -1,5 +1,5 @@
 import { Box, Heading, Text, VStack, HStack, Icon, Flex } from '@chakra-ui/react'
-import { FaBriefcase, FaGraduationCap, FaRocket } from 'react-icons/fa'
+import { FaBriefcase, FaGraduationCap, FaRocket, FaVirusSlash } from 'react-icons/fa'
 
 const WorkTimeline = () => {
   const timelineEvents = [
@@ -38,6 +38,33 @@ const WorkTimeline = () => {
       icon: FaGraduationCap,
       color: '#6BCF7F',
       type: 'education'
+    },
+    {
+      date: '2020',
+      title: 'Global Pandemic',
+      company: 'The Great Pause',
+      description: 'Adapted to remote work, learned new skills, and navigated unprecedented times',
+      icon: FaVirusSlash,
+      color: '#95A5A6',
+      type: 'special'
+    },
+    {
+      date: 'Jun 2017 - Dec 2019',
+      title: 'Complex Electronics Tech',
+      company: 'ExxonMobil Refinery',
+      description: 'Maintained and troubleshot complex electronic systems in refinery operations',
+      icon: FaBriefcase,
+      color: '#E74C3C',
+      type: 'work'
+    },
+    {
+      date: 'Mar 2014 - May 2017',
+      title: 'Area Sales Manager',
+      company: 'Dorman Products',
+      description: 'Managed accounts for the automotive aftermarket and traditional market sectors',
+      icon: FaBriefcase,
+      color: '#9B59B6',
+      type: 'work'
     }
   ]
 
@@ -91,7 +118,7 @@ const WorkTimeline = () => {
                   flex={1}
                   p={6}
                   ml={{ base: 4, md: 8 }}
-                  bg={event.type === 'current' ? 'gray.50' : 'white'}
+                  bg={event.type === 'current' ? 'gray.50' : event.type === 'special' ? 'gray.50' : 'white'}
                   borderRadius="xl"
                   borderWidth="1px"
                   borderColor={event.type === 'current' ? event.color : 'gray.200'}
