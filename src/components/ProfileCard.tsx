@@ -105,22 +105,29 @@ const ProfileCard = () => {
         </VStack>
 
         {/* Download CV Button */}
-        <Box
-          as="button"
-          mt={4}
-          px={6}
-          py={3}
-          bg="gray.900"
-          color="white"
-          borderRadius="full"
-          fontSize="sm"
-          fontWeight="medium"
-          _hover={{ bg: 'gray.800', transform: 'translateY(-2px)' }}
-          transition="all 0.2s"
+        <Link
+          href="/George%20Cavazos%20_%20Resume%202025%20(1).pdf"
+          download="George_Cavazos_Resume_2025.pdf"
+          _hover={{ textDecoration: 'none' }}
           w="full"
         >
-          Download Resume
-        </Box>
+          <Box
+            as="button"
+            mt={4}
+            px={6}
+            py={3}
+            bg="gray.900"
+            color="white"
+            borderRadius="full"
+            fontSize="sm"
+            fontWeight="medium"
+            _hover={{ bg: 'gray.800', transform: 'translateY(-2px)' }}
+            transition="all 0.2s"
+            w="full"
+          >
+            Download Resume
+          </Box>
+        </Link>
       </VStack>
     </Box>
   )
