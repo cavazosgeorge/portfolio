@@ -6,6 +6,7 @@ import AboutSection from './components/AboutSection'
 import WhatIDoSection from './components/WhatIDoSection'
 import Resume from './components/Resume'
 import WorkTimeline from './components/WorkTimeline'
+import ContactSection from './components/ContactSection'
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'resume' | 'work' | 'contact'>('home')
@@ -24,7 +25,7 @@ function App() {
       case 'work':
         return <WorkTimeline />
       case 'contact':
-        return <Box>Contact section coming soon...</Box>
+        return <ContactSection />
       default:
         return null
     }

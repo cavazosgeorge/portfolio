@@ -1,5 +1,6 @@
 import { Box, Image, Text, VStack, HStack, Link, Icon } from '@chakra-ui/react'
-import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa'
+import { FaLinkedin, FaGithub, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 
 const ProfileCard = () => {
   return (
@@ -48,8 +49,9 @@ const ProfileCard = () => {
         {/* Social Links */}
         <HStack gap={3} pt={2}>
           <Link
-            href="https://linkedin.com"
-            isExternal
+            href="https://www.linkedin.com/in/georgecavazos/"
+            target="_blank"
+            rel="noopener noreferrer"
             p={2}
             borderRadius="md"
             bg="gray.100"
@@ -59,8 +61,9 @@ const ProfileCard = () => {
             <Icon as={FaLinkedin} boxSize={5} color="gray.700" />
           </Link>
           <Link
-            href="https://github.com"
-            isExternal
+            href="https://github.com/cavazosgeorge"
+            target="_blank"
+            rel="noopener noreferrer"
             p={2}
             borderRadius="md"
             bg="gray.100"
@@ -70,15 +73,16 @@ const ProfileCard = () => {
             <Icon as={FaGithub} boxSize={5} color="gray.700" />
           </Link>
           <Link
-            href="https://twitter.com"
-            isExternal
+            href="https://x.com/Jax0042"
+            target="_blank"
+            rel="noopener noreferrer"
             p={2}
             borderRadius="md"
             bg="gray.100"
             _hover={{ bg: 'gray.200', transform: 'translateY(-2px)' }}
             transition="all 0.2s"
           >
-            <Icon as={FaTwitter} boxSize={5} color="gray.700" />
+            <Icon as={FaXTwitter} boxSize={5} color="gray.700" />
           </Link>
         </HStack>
 
@@ -86,7 +90,7 @@ const ProfileCard = () => {
         <VStack align="stretch" w="full" gap={3} pt={4}>
           <HStack gap={3} justify="center">
             <Icon as={FaPhone} color="gray.500" />
-            <Text fontSize="sm" color="gray.700">269-352-0115</Text>
+            <Text fontSize="sm" color="gray.700">269-263-9363</Text>
           </HStack>
           <HStack gap={3} justify="center">
             <Icon as={FaEnvelope} color="gray.500" />
