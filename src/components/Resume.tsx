@@ -66,13 +66,13 @@ const Resume = () => {
   return (
     <Stack gap={8}>
       {/* Education & Experience Section */}
-      <Box bg="white" borderRadius="2xl" p={8} shadow="lg">
+      <Box bg={{ base: 'white', _dark: 'gray.800' }} borderRadius="2xl" p={8} shadow="lg">
         <SimpleGrid columns={{ base: 1, lg: 2 }} gap={8}>
           {/* Education */}
           <Box>
             <HStack mb={6} gap={3}>
-              <Icon as={FaGraduationCap} boxSize={6} color="gray.700" />
-              <Heading size="lg" color="gray.800">
+              <Icon as={FaGraduationCap} boxSize={6} color={{ base: 'gray.700', _dark: 'gray.300' }} />
+              <Heading size="lg" color={{ base: 'gray.800', _dark: 'white' }}>
                 Education
               </Heading>
             </HStack>
@@ -81,21 +81,21 @@ const Resume = () => {
                 <Box
                   key={index}
                   p={6}
-                  bg="#FFE4E1"
+                  bg={{ base: '#FFE4E1', _dark: '#4a3638' }}
                   borderRadius="xl"
                   transition="all 0.3s"
                   _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
                 >
-                  <HStack mb={2} color="gray.600" fontSize="sm">
+                  <HStack mb={2} color={{ base: 'gray.600', _dark: 'gray.400' }} fontSize="sm">
                     <Icon as={FaCalendarAlt} />
                     <Text>{edu.period}</Text>
                   </HStack>
                   <VStack align="start" gap={1}>
-                    <Text fontWeight="bold" color="gray.800" fontSize="lg">
+                    <Text fontWeight="bold" color={{ base: 'gray.800', _dark: 'white' }} fontSize="lg">
                       {edu.degree}
                     </Text>
-                    <Text color="gray.600">{edu.institution}</Text>
-                    <Text fontSize="sm" color="gray.500">{edu.type}</Text>
+                    <Text color={{ base: 'gray.600', _dark: 'gray.300' }}>{edu.institution}</Text>
+                    <Text fontSize="sm" color={{ base: 'gray.500', _dark: 'gray.400' }}>{edu.type}</Text>
                   </VStack>
                 </Box>
               ))}
@@ -105,8 +105,8 @@ const Resume = () => {
           {/* Experience */}
           <Box>
             <HStack mb={6} gap={3}>
-              <Icon as={FaBriefcase} boxSize={6} color="gray.700" />
-              <Heading size="lg" color="gray.800">
+              <Icon as={FaBriefcase} boxSize={6} color={{ base: 'gray.700', _dark: 'gray.300' }} />
+              <Heading size="lg" color={{ base: 'gray.800', _dark: 'white' }}>
                 Experience
               </Heading>
             </HStack>
@@ -115,21 +115,21 @@ const Resume = () => {
                 <Box
                   key={index}
                   p={6}
-                  bg="#E6F3FF"
+                  bg={{ base: '#E6F3FF', _dark: '#2d3748' }}
                   borderRadius="xl"
                   transition="all 0.3s"
                   _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
                 >
-                  <HStack mb={2} color="gray.600" fontSize="sm">
+                  <HStack mb={2} color={{ base: 'gray.600', _dark: 'gray.400' }} fontSize="sm">
                     <Icon as={FaCalendarAlt} />
                     <Text>{exp.period}</Text>
                   </HStack>
                   <VStack align="start" gap={1}>
-                    <Text fontWeight="bold" color="gray.800" fontSize="lg">
+                    <Text fontWeight="bold" color={{ base: 'gray.800', _dark: 'white' }} fontSize="lg">
                       {exp.title}
                     </Text>
-                    <Text color="gray.600">{exp.company}</Text>
-                    <Text fontSize="sm" color="gray.500">{exp.type}</Text>
+                    <Text color={{ base: 'gray.600', _dark: 'gray.300' }}>{exp.company}</Text>
+                    <Text fontSize="sm" color={{ base: 'gray.500', _dark: 'gray.400' }}>{exp.type}</Text>
                   </VStack>
                 </Box>
               ))}
@@ -139,11 +139,11 @@ const Resume = () => {
       </Box>
 
       {/* Skills Section */}
-      <Box bg="white" borderRadius="2xl" p={8} shadow="lg">
+      <Box bg={{ base: 'white', _dark: 'gray.800' }} borderRadius="2xl" p={8} shadow="lg">
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={8}>
           {/* Work Skills */}
           <Box>
-            <Heading size="md" mb={4} color="gray.800">
+            <Heading size="md" mb={4} color={{ base: 'gray.800', _dark: 'white' }}>
               Technical Skills
             </Heading>
             <Flex wrap="wrap" gap={3}>
@@ -152,14 +152,14 @@ const Resume = () => {
                   key={index}
                   px={4}
                   py={2}
-                  bg="gray.100"
-                  color="gray.700"
+                  bg={{ base: 'gray.100', _dark: 'gray.700' }}
+                  color={{ base: 'gray.700', _dark: 'gray.200' }}
                   borderRadius="full"
                   fontSize="sm"
                   fontWeight="medium"
                   transition="all 0.2s"
                   _hover={{ 
-                    bg: 'gray.200', 
+                    bg: { base: 'gray.200', _dark: 'gray.600' }, 
                     transform: 'translateY(-1px)',
                     shadow: 'sm'
                   }}
@@ -172,7 +172,7 @@ const Resume = () => {
 
           {/* Soft Skills */}
           <Box>
-            <Heading size="md" mb={4} color="gray.800">
+            <Heading size="md" mb={4} color={{ base: 'gray.800', _dark: 'white' }}>
               Soft Skills
             </Heading>
             <Flex wrap="wrap" gap={3}>
@@ -181,14 +181,14 @@ const Resume = () => {
                   key={index}
                   px={4}
                   py={2}
-                  bg="gray.100"
-                  color="gray.700"
+                  bg={{ base: 'gray.100', _dark: 'gray.700' }}
+                  color={{ base: 'gray.700', _dark: 'gray.200' }}
                   borderRadius="full"
                   fontSize="sm"
                   fontWeight="medium"
                   transition="all 0.2s"
                   _hover={{ 
-                    bg: 'gray.200', 
+                    bg: { base: 'gray.200', _dark: 'gray.600' }, 
                     transform: 'translateY(-1px)',
                     shadow: 'sm'
                   }}

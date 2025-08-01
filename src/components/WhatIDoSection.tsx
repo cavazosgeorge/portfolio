@@ -30,10 +30,10 @@ const WhatIDoSection = () => {
   ]
 
   return (
-    <Box bg="white" borderRadius="2xl" p={8} shadow="lg" mt={8}>
+    <Box bg={{ base: 'white', _dark: 'gray.800' }} borderRadius="2xl" p={8} shadow="lg" mt={8}>
       <VStack align="stretch" gap={6}>
         <Box>
-          <Heading size="2xl" mb={4} color="gray.800">
+          <Heading size="2xl" mb={4} color={{ base: 'gray.800', _dark: 'white' }}>
             What I Do
           </Heading>
           <Box w="80px" h="4px" bg="gradient.to-r" gradientFrom="#FF6B6B" gradientTo="#4ECDC4" borderRadius="full" mb={6} />
@@ -45,16 +45,15 @@ const WhatIDoSection = () => {
               key={index}
               p={6}
               borderRadius="xl"
-              bg="gray.50"
-              transition="all 0.3s"
+              bg={{ base: 'gray.50', _dark: 'gray.700' }}
+              transition="transform 0.3s, box-shadow 0.3s, border 0.3s"
               _hover={{ 
                 transform: 'translateY(-4px)', 
                 shadow: 'xl',
-                bg: 'white',
+                bg: { base: 'white', _dark: 'gray.800' },
                 borderWidth: '1px',
-                borderColor: 'gray.200'
+                borderColor: { base: 'gray.200', _dark: 'gray.600' }
               }}
-              cursor="pointer"
             >
               <VStack align="start" gap={4}>
                 <Box
@@ -67,10 +66,10 @@ const WhatIDoSection = () => {
                   <Icon as={service.icon} boxSize={6} />
                 </Box>
                 <Box>
-                  <Heading size="md" mb={2} color="gray.800">
+                  <Heading size="md" mb={2} color={{ base: 'gray.800', _dark: 'white' }}>
                     {service.title}
                   </Heading>
-                  <Text color="gray.600" fontSize="sm" lineHeight="tall">
+                  <Text color={{ base: 'gray.600', _dark: 'gray.300' }} fontSize="sm" lineHeight="tall">
                     {service.description}
                   </Text>
                 </Box>
