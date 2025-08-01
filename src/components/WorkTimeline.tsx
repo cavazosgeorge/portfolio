@@ -69,10 +69,10 @@ const WorkTimeline = () => {
   ]
 
   return (
-    <Box bg="white" borderRadius="2xl" p={8} shadow="lg">
+    <Box bg={{ base: 'white', _dark: 'gray.800' }} borderRadius="2xl" p={8} shadow="lg">
       <VStack align="stretch" gap={6}>
         <Box>
-          <Heading size="2xl" mb={4} color="gray.800">
+          <Heading size="2xl" mb={4} color={{ base: 'gray.800', _dark: 'white' }}>
             My Journey
           </Heading>
           <Box w="80px" h="4px" bg="gradient.to-r" gradientFrom="#FF6B6B" gradientTo="#4ECDC4" borderRadius="full" mb={8} />
@@ -87,7 +87,7 @@ const WorkTimeline = () => {
             top="0"
             bottom="0"
             w="2px"
-            bg="gray.200"
+            bg={{ base: 'gray.200', _dark: 'gray.600' }}
           />
 
           <VStack align="stretch" gap={8}>
@@ -105,7 +105,7 @@ const WorkTimeline = () => {
                   alignItems="center"
                   justifyContent="center"
                   shadow="lg"
-                  border="4px solid white"
+                  border={{ base: '4px solid white', _dark: '4px solid var(--chakra-colors-gray-800)' }}
                   zIndex={2}
                   transition="all 0.3s"
                   _hover={{ transform: 'scale(1.1)' }}
@@ -118,10 +118,13 @@ const WorkTimeline = () => {
                   flex={1}
                   p={6}
                   ml={{ base: 4, md: 8 }}
-                  bg={event.type === 'current' ? 'gray.50' : event.type === 'special' ? 'gray.50' : 'white'}
+                  bg={{
+                    base: event.type === 'current' ? 'gray.50' : event.type === 'special' ? 'gray.50' : 'white',
+                    _dark: event.type === 'current' ? 'gray.700' : event.type === 'special' ? 'gray.700' : 'gray.800'
+                  }}
                   borderRadius="xl"
                   borderWidth="1px"
-                  borderColor={event.type === 'current' ? event.color : 'gray.200'}
+                  borderColor={event.type === 'current' ? event.color : { base: 'gray.200', _dark: 'gray.600' }}
                   borderLeftWidth="3px"
                   borderLeftColor={event.color}
                   shadow="sm"
@@ -134,18 +137,18 @@ const WorkTimeline = () => {
                 >
                   <HStack justify="space-between" wrap="wrap" mb={2}>
                     <VStack align="start" gap={0}>
-                      <Text fontWeight="bold" fontSize="lg" color="gray.800">
+                      <Text fontWeight="bold" fontSize="lg" color={{ base: 'gray.800', _dark: 'white' }}>
                         {event.title}
                       </Text>
                       <Text color={event.color} fontWeight="medium">
                         {event.company}
                       </Text>
                     </VStack>
-                    <Text fontSize="sm" color="gray.500" fontWeight="medium">
+                    <Text fontSize="sm" color={{ base: 'gray.500', _dark: 'gray.400' }} fontWeight="medium">
                       {event.date}
                     </Text>
                   </HStack>
-                  <Text color="gray.600" fontSize="sm" mt={2}>
+                  <Text color={{ base: 'gray.600', _dark: 'gray.300' }} fontSize="sm" mt={2}>
                     {event.description}
                   </Text>
                   {event.type === 'current' && (
@@ -176,7 +179,7 @@ const WorkTimeline = () => {
             bottom="-20px"
             w="10px"
             h="10px"
-            bg="gray.300"
+            bg={{ base: 'gray.300', _dark: 'gray.600' }}
             borderRadius="full"
           />
         </Box>
