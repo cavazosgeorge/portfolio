@@ -21,7 +21,7 @@ const AboutSection = () => {
           
           <Box p={6} borderRadius="xl" bg={{ base: 'gray.50', _dark: 'gray.700' }}>
             <Text color={{ base: 'gray.600', _dark: 'gray.300' }} lineHeight="tall" fontSize="md">
-              Currently working as a Systems Engineer at Pfizer, I've developed comprehensive automation solutions and real-time monitoring dashboards. 
+              Currently working as a Sr. Automation IT/OT Engineer at Pfizer, I've developed comprehensive automation solutions and real-time monitoring dashboards. 
               My journey in tech spans from network infrastructure to modern web development, always focusing on creating efficient, user-centric solutions.
             </Text>
           </Box>
