@@ -5,7 +5,7 @@ import { FaXTwitter } from 'react-icons/fa6'
 const ProfileCard = () => {
   return (
     <Box
-      bg="white"
+      bg={{ base: 'white', _dark: 'gray.800' }}
       borderRadius="2xl"
       p={8}
       shadow="lg"
@@ -38,10 +38,10 @@ const ProfileCard = () => {
         />
         
         <VStack gap={1}>
-          <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+          <Text fontSize="2xl" fontWeight="bold" color={{ base: 'gray.800', _dark: 'white' }}>
             George Cavazos
           </Text>
-          <Text color="gray.600" fontSize="sm">
+          <Text color={{ base: 'gray.600', _dark: 'gray.400' }} fontSize="sm">
             Full Stack Developer
           </Text>
         </VStack>
@@ -54,11 +54,11 @@ const ProfileCard = () => {
             rel="noopener noreferrer"
             p={2}
             borderRadius="md"
-            bg="gray.100"
-            _hover={{ bg: 'gray.200', transform: 'translateY(-2px)' }}
+            bg={{ base: 'gray.100', _dark: 'gray.700' }}
+            _hover={{ bg: { base: 'gray.200', _dark: 'gray.600' }, transform: 'translateY(-2px)' }}
             transition="all 0.2s"
           >
-            <Icon as={FaLinkedin} boxSize={5} color="gray.700" />
+            <Icon as={FaLinkedin} boxSize={5} color={{ base: 'gray.700', _dark: 'white' }} />
           </Link>
           <Link
             href="https://github.com/cavazosgeorge"
@@ -66,11 +66,11 @@ const ProfileCard = () => {
             rel="noopener noreferrer"
             p={2}
             borderRadius="md"
-            bg="gray.100"
-            _hover={{ bg: 'gray.200', transform: 'translateY(-2px)' }}
+            bg={{ base: 'gray.100', _dark: 'gray.700' }}
+            _hover={{ bg: { base: 'gray.200', _dark: 'gray.600' }, transform: 'translateY(-2px)' }}
             transition="all 0.2s"
           >
-            <Icon as={FaGithub} boxSize={5} color="gray.700" />
+            <Icon as={FaGithub} boxSize={5} color={{ base: 'gray.700', _dark: 'white' }} />
           </Link>
           <Link
             href="https://x.com/Jax0042"
@@ -78,29 +78,29 @@ const ProfileCard = () => {
             rel="noopener noreferrer"
             p={2}
             borderRadius="md"
-            bg="gray.100"
-            _hover={{ bg: 'gray.200', transform: 'translateY(-2px)' }}
+            bg={{ base: 'gray.100', _dark: 'gray.700' }}
+            _hover={{ bg: { base: 'gray.200', _dark: 'gray.600' }, transform: 'translateY(-2px)' }}
             transition="all 0.2s"
           >
-            <Icon as={FaXTwitter} boxSize={5} color="gray.700" />
+            <Icon as={FaXTwitter} boxSize={5} color={{ base: 'gray.700', _dark: 'white' }} />
           </Link>
         </HStack>
 
         {/* Contact Info */}
         <VStack align="stretch" w="full" gap={3} pt={4}>
           <HStack gap={3} justify="center">
-            <Icon as={FaPhone} color="gray.500" />
-            <Text fontSize="sm" color="gray.700">269-263-9363</Text>
+            <Icon as={FaPhone} color={{ base: 'gray.500', _dark: 'gray.400' }} />
+            <Text fontSize="sm" color={{ base: 'gray.700', _dark: 'gray.300' }}>269-263-9363</Text>
           </HStack>
           <HStack gap={3} justify="center">
-            <Icon as={FaEnvelope} color="gray.500" />
-            <Link href="mailto:cavazosgeorge@yahoo.com" fontSize="sm" color="gray.700">
+            <Icon as={FaEnvelope} color={{ base: 'gray.500', _dark: 'gray.400' }} />
+            <Link href="mailto:cavazosgeorge@yahoo.com" fontSize="sm" color={{ base: 'gray.700', _dark: 'gray.300' }}>
               cavazosgeorge@yahoo.com
             </Link>
           </HStack>
           <HStack gap={3} justify="center">
-            <Icon as={FaMapMarkerAlt} color="gray.500" />
-            <Text fontSize="sm" color="gray.700">Kalamazoo, MI</Text>
+            <Icon as={FaMapMarkerAlt} color={{ base: 'gray.500', _dark: 'gray.400' }} />
+            <Text fontSize="sm" color={{ base: 'gray.700', _dark: 'gray.300' }}>Kalamazoo, MI</Text>
           </HStack>
         </VStack>
 
@@ -116,12 +116,12 @@ const ProfileCard = () => {
             mt={4}
             px={6}
             py={3}
-            bg="gray.900"
-            color="white"
+            bg={{ base: 'gray.900', _dark: 'white' }}
+            color={{ base: 'white', _dark: 'gray.900' }}
             borderRadius="full"
             fontSize="sm"
             fontWeight="medium"
-            _hover={{ bg: 'gray.800', transform: 'translateY(-2px)' }}
+            _hover={{ bg: { base: 'gray.800', _dark: 'gray.100' }, transform: 'translateY(-2px)' }}
             transition="all 0.2s"
             w="full"
           >

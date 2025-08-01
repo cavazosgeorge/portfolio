@@ -7,6 +7,7 @@ import WhatIDoSection from './components/WhatIDoSection'
 import Resume from './components/Resume'
 import WorkTimeline from './components/WorkTimeline'
 import ContactSection from './components/ContactSection'
+import ThemeToggle from './components/ThemeToggle'
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'resume' | 'work' | 'contact'>('home')
@@ -32,7 +33,8 @@ function App() {
   }
 
   return (
-    <Box minH="100vh" bg="#f5f5f5">
+    <Box minH="100vh" bg={{ base: '#f5f5f5', _dark: 'gray.900' }}>
+      <ThemeToggle />
       <Flex direction={{ base: 'column', lg: 'row' }} maxW="1400px" mx="auto" p={{ base: 4, md: 8 }} gap={8}>
         {/* Left Sidebar - Profile Card */}
         <Box 
