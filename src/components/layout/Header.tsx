@@ -34,23 +34,8 @@ export function Header() {
         <Flex
           h="80px"
           align="center"
-          justify="space-between"
+          justify="center"
         >
-          {/* Logo */}
-          <MagneticElement strength={0.2} radius={100}>
-            <Link
-              href="#"
-              fontFamily="var(--font-display)"
-              fontWeight="700"
-              fontSize="xl"
-              color="var(--text-primary)"
-              _hover={{ textDecoration: "none", color: "var(--glow-cyan)" }}
-              transition="color 0.3s ease"
-            >
-              GC
-            </Link>
-          </MagneticElement>
-
           {/* Navigation */}
           <Flex as="nav" gap={8} display={{ base: "none", md: "flex" }}>
             {navLinks.map((link) => (

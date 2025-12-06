@@ -100,7 +100,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5, duration: 1 }}
-            style={{ position: "absolute", bottom: "3rem" }}
+            style={{ marginTop: "4rem" }}
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
