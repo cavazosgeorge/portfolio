@@ -6,7 +6,6 @@ interface MagneticElementProps {
   children: ReactNode;
   strength?: number;
   radius?: number;
-  as?: keyof JSX.IntrinsicElements;
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
@@ -16,7 +15,6 @@ export function MagneticElement({
   children,
   strength = 0.3,
   radius = 150,
-  as = "div",
   className,
   style,
   onClick,
@@ -24,10 +22,8 @@ export function MagneticElement({
   const ref = useRef<HTMLDivElement>(null);
   const offset = useMagneticEffect(ref, strength, radius);
 
-  const MotionComponent = motion[as as keyof typeof motion] || motion.div;
-
   return (
-    <MotionComponent
+    <motion.div
       ref={ref}
       className={className}
       style={style}
@@ -44,6 +40,6 @@ export function MagneticElement({
       }}
     >
       {children}
-    </MotionComponent>
+    </motion.div>
   );
 }

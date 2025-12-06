@@ -1,0 +1,28 @@
+{
+  "project": "",
+  "checks": [
+    {
+      "id": "E001",
+      "description": "Linting passes",
+      "steps": ["Run lint command"],
+      "expected": "No errors (warnings acceptable)",
+      "status": "pending",
+      "runAfter": "every implementation"
+    },
+    {
+      "id": "E002",
+      "description": "Build passes",
+      "steps": ["Run build command"],
+      "expected": "Build completes with no errors",
+      "status": "pending",
+      "runAfter": "every implementation"
+    },
+    {
+      "id": "E003",
+      "description": "App starts without errors",
+      "steps": ["Run start command", "Check for errors in console"],
+      "expected": "No errors, app accessible",
+      "status": "pending"
+    }
+  ]
+}

@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
-import { Box } from "@chakra-ui/react";
 import { useRef, ReactNode } from "react";
 import { useMagneticEffect } from "../../hooks/useMagneticEffect";
 
 interface SplitTextProps {
   children: string;
-  as?: "h1" | "h2" | "h3" | "p" | "span";
   className?: string;
   magnetic?: boolean;
   delay?: number;
@@ -20,6 +18,8 @@ function MagneticLetter({ children }: { children: ReactNode }) {
       ref={ref}
       style={{
         display: "inline-block",
+      }}
+      animate={{
         x: offset.x,
         y: offset.y,
       }}
@@ -32,7 +32,6 @@ function MagneticLetter({ children }: { children: ReactNode }) {
 
 export function SplitText({
   children,
-  as = "span",
   className,
   magnetic = false,
   delay = 0,
@@ -50,35 +49,31 @@ export function SplitText({
     },
   };
 
-  const letter = {
-    hidden: { y: 50, opacity: 0, rotateX: -90 },
+  const letterVariant = {
+    hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      rotateX: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 12,
         stiffness: 100,
       },
     },
   };
 
-  const MotionBox = motion(Box);
-
   return (
-    <MotionBox
-      as={as}
+    <motion.span
       className={className}
       variants={container}
       initial="hidden"
       animate="visible"
-      style={{ display: "inline-block", perspective: "1000px" }}
+      style={{ display: "inline-block" }}
     >
       {letters.map((char, index) => (
         <motion.span
           key={index}
-          variants={letter}
+          variants={letterVariant}
           style={{
             display: "inline-block",
             whiteSpace: char === " " ? "pre" : "normal",
@@ -91,6 +86,6 @@ export function SplitText({
           )}
         </motion.span>
       ))}
-    </MotionBox>
+    </motion.span>
   );
 }
