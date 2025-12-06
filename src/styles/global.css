@@ -85,6 +85,14 @@ body::before {
   outline-offset: 2px;
 }
 
+/* Container centering fix for Chakra UI */
+.chakra-container {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -106,27 +106,29 @@ export function Projects() {
         <VStack gap={12} align="stretch">
           {/* Section header */}
           <RevealOnScroll>
-            <Text
-              fontSize="sm"
-              fontFamily="var(--font-mono)"
-              color="var(--glow-cyan)"
-              letterSpacing="0.2em"
-              textTransform="uppercase"
-              mb={2}
-            >
-              Projects
-            </Text>
-            <Text
-              fontSize={{ base: "3xl", md: "4xl" }}
-              fontFamily="var(--font-display)"
-              fontWeight="600"
-              lineHeight="1.2"
-            >
-              Things I've{" "}
-              <Text as="span" color="var(--warm-coral)">
-                built
+            <Box textAlign="center">
+              <Text
+                fontSize="sm"
+                fontFamily="var(--font-mono)"
+                color="var(--glow-cyan)"
+                letterSpacing="0.2em"
+                textTransform="uppercase"
+                mb={2}
+              >
+                Projects
               </Text>
-            </Text>
+              <Text
+                fontSize={{ base: "3xl", md: "4xl" }}
+                fontFamily="var(--font-display)"
+                fontWeight="600"
+                lineHeight="1.2"
+              >
+                Things I've{" "}
+                <Text as="span" color="var(--warm-coral)">
+                  built
+                </Text>
+              </Text>
+            </Box>
           </RevealOnScroll>
 
           {/* Featured projects */}
@@ -152,6 +154,7 @@ export function Projects() {
                 color="var(--text-secondary)"
                 mb={4}
                 letterSpacing="0.1em"
+                textAlign="center"
               >
                 OTHER PROJECTS
               </Text>

@@ -58,32 +58,34 @@ export function About() {
         <VStack gap={12} align="stretch">
           {/* Section header */}
           <RevealOnScroll>
-            <Text
-              fontSize="sm"
-              fontFamily="var(--font-mono)"
-              color="var(--glow-cyan)"
-              letterSpacing="0.2em"
-              textTransform="uppercase"
-              mb={2}
-            >
-              About
-            </Text>
-            <Text
-              fontSize={{ base: "3xl", md: "4xl" }}
-              fontFamily="var(--font-display)"
-              fontWeight="600"
-              lineHeight="1.2"
-            >
-              Building at the intersection of
-              <br />
-              <Text as="span" color="var(--glow-cyan)">
-                creativity
-              </Text>{" "}
-              and{" "}
-              <Text as="span" color="var(--warm-coral)">
-                code
+            <Box textAlign="center">
+              <Text
+                fontSize="sm"
+                fontFamily="var(--font-mono)"
+                color="var(--glow-cyan)"
+                letterSpacing="0.2em"
+                textTransform="uppercase"
+                mb={2}
+              >
+                About
               </Text>
-            </Text>
+              <Text
+                fontSize={{ base: "3xl", md: "4xl" }}
+                fontFamily="var(--font-display)"
+                fontWeight="600"
+                lineHeight="1.2"
+              >
+                Building at the intersection of
+                <br />
+                <Text as="span" color="var(--glow-cyan)">
+                  creativity
+                </Text>{" "}
+                and{" "}
+                <Text as="span" color="var(--warm-coral)">
+                  code
+                </Text>
+              </Text>
+            </Box>
           </RevealOnScroll>
 
           {/* Bio content */}

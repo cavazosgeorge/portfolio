@@ -182,27 +182,29 @@ export function Experience() {
         <VStack gap={12} align="stretch">
           {/* Section header */}
           <RevealOnScroll>
-            <Text
-              fontSize="sm"
-              fontFamily="var(--font-mono)"
-              color="var(--glow-cyan)"
-              letterSpacing="0.2em"
-              textTransform="uppercase"
-              mb={2}
-            >
-              Experience
-            </Text>
-            <Text
-              fontSize={{ base: "3xl", md: "4xl" }}
-              fontFamily="var(--font-display)"
-              fontWeight="600"
-              lineHeight="1.2"
-            >
-              Where I've{" "}
-              <Text as="span" color="var(--soft-lavender)">
-                worked
+            <Box textAlign="center">
+              <Text
+                fontSize="sm"
+                fontFamily="var(--font-mono)"
+                color="var(--glow-cyan)"
+                letterSpacing="0.2em"
+                textTransform="uppercase"
+                mb={2}
+              >
+                Experience
               </Text>
-            </Text>
+              <Text
+                fontSize={{ base: "3xl", md: "4xl" }}
+                fontFamily="var(--font-display)"
+                fontWeight="600"
+                lineHeight="1.2"
+              >
+                Where I've{" "}
+                <Text as="span" color="var(--soft-lavender)">
+                  worked
+                </Text>
+              </Text>
+            </Box>
           </RevealOnScroll>
 
           {/* Timeline */}
