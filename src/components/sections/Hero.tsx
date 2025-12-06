@@ -1,6 +1,5 @@
 import { Box, Container, Text, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { MorphingBlob } from "../animations/MorphingBlob";
 import { SplitText } from "../animations/SplitText";
 
 export function Hero() {
@@ -12,42 +11,8 @@ export function Hero() {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      overflow="hidden"
     >
-      {/* Morphing blob background */}
-      <Box
-        position="absolute"
-        inset={0}
-        overflow="hidden"
-        zIndex={0}
-      >
-        <MorphingBlob
-          color="var(--glow-cyan)"
-          size={600}
-          top="-10%"
-          left="-10%"
-          duration={25}
-        />
-        <MorphingBlob
-          color="var(--warm-coral)"
-          size={500}
-          top="20%"
-          right="-15%"
-          delay={5}
-          duration={30}
-        />
-        <MorphingBlob
-          color="var(--soft-lavender)"
-          size={450}
-          bottom="-5%"
-          left="30%"
-          delay={10}
-          duration={22}
-        />
-      </Box>
-
-      {/* Content */}
-      <Container maxW="container.xl" position="relative" zIndex={1}>
+      <Container maxW="container.xl" position="relative">
         <VStack gap={6} align="center" textAlign="center">
           <Box>
             <Text

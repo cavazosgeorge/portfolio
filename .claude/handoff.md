@@ -13,7 +13,7 @@
 
 ## What Was Done
 
-### Session: 2024-12-06
+### Session: 2025-12-06
 
 **Project Setup**
 - Initialized Vite + React + TypeScript with Bun
@@ -51,6 +51,16 @@
 - **Experience** - Timeline with animated dots and connecting lines
 - **Contact** - Form with magnetic button, social links
 - **Header** - Fixed nav with scroll-based transparency, magnetic links
+
+**Bug Fixes & Refinements**
+- Fixed esbuild EPIPE error by clean reinstall (`rm -rf node_modules bun.lock && bun install`)
+- Fixed TypeScript errors with Chakra UI v3 polymorphic `as` prop - used native HTML elements
+- Removed unused imports (Box from SplitText, Link from Projects)
+- Updated `index.html` - changed title to "George Cavazos | Software Developer" and added wave emoji favicon
+- Added container centering fix in global.css for Chakra UI
+- Added `textAlign="center"` to section headers for proper alignment
+- Removed GC logo from Header, centered navigation
+- Fixed scroll indicator overlap - changed from absolute positioning to margin-based flow
 
 ### File Structure
 ```
@@ -98,4 +108,4 @@ src/
 - None
 
 ---
-*Last updated: 2024-12-06*
+*Last updated: 2025-12-06*
