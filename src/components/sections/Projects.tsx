@@ -10,9 +10,89 @@ interface ProjectCardProps {
   tags: string[];
   index: number;
   featured?: boolean;
+  link?: string;
 }
 
-function ProjectCard({ title, description, tags, index, featured }: ProjectCardProps) {
+function ProjectCard({ title, description, tags, index, featured, link }: ProjectCardProps) {
+  const cardContent = (
+    <Box
+      p={6}
+      bg="var(--void-lighter)"
+      borderRadius="xl"
+      border="1px solid"
+      borderColor="rgba(255,255,255,0.05)"
+      h="100%"
+      display="flex"
+      flexDirection="column"
+    >
+      {/* Featured badge */}
+      {featured && (
+        <Text
+          fontSize="xs"
+          fontFamily="var(--font-mono)"
+          color="var(--glow-cyan)"
+          letterSpacing="0.1em"
+          mb={3}
+        >
+          ★ FEATURED
+        </Text>
+      )}
+
+      {/* Title */}
+      <Text
+        fontSize="xl"
+        fontFamily="var(--font-display)"
+        fontWeight="600"
+        mb={3}
+        color="var(--text-primary)"
+      >
+        {title}
+      </Text>
+
+      {/* Description */}
+      <Text
+        fontSize="sm"
+        color="var(--text-secondary)"
+        lineHeight="1.7"
+        mb={4}
+        flex={1}
+      >
+        {description}
+      </Text>
+
+      {/* Tags and Link */}
+      <Flex flexWrap="wrap" gap={2} align="center">
+        {tags.map((tag) => (
+          <Box
+            key={tag}
+            px={2}
+            py={1}
+            bg="rgba(255,255,255,0.05)"
+            borderRadius="md"
+            fontSize="xs"
+            fontFamily="var(--font-mono)"
+            color="var(--text-secondary)"
+          >
+            {tag}
+          </Box>
+        ))}
+        {link && (
+          <Box
+            ml="auto"
+            fontSize="xs"
+            fontFamily="var(--font-mono)"
+            color="var(--glow-cyan)"
+            display="flex"
+            alignItems="center"
+            gap={1}
+          >
+            View Project →
+          </Box>
+        )}
+      </Flex>
+    </Box>
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -20,73 +100,17 @@ function ProjectCard({ title, description, tags, index, featured }: ProjectCardP
       viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      <TiltCard
-        glowColor={featured ? "var(--glow-cyan)" : "var(--soft-lavender)"}
-      >
-        <Box
-          p={6}
-          bg="var(--void-lighter)"
-          borderRadius="xl"
-          border="1px solid"
-          borderColor="rgba(255,255,255,0.05)"
-          h="100%"
-          display="flex"
-          flexDirection="column"
-        >
-          {/* Featured badge */}
-          {featured && (
-            <Text
-              fontSize="xs"
-              fontFamily="var(--font-mono)"
-              color="var(--glow-cyan)"
-              letterSpacing="0.1em"
-              mb={3}
-            >
-              ★ FEATURED
-            </Text>
-          )}
-
-          {/* Title */}
-          <Text
-            fontSize="xl"
-            fontFamily="var(--font-display)"
-            fontWeight="600"
-            mb={3}
-            color="var(--text-primary)"
-          >
-            {title}
-          </Text>
-
-          {/* Description */}
-          <Text
-            fontSize="sm"
-            color="var(--text-secondary)"
-            lineHeight="1.7"
-            mb={4}
-            flex={1}
-          >
-            {description}
-          </Text>
-
-          {/* Tags */}
-          <Flex flexWrap="wrap" gap={2}>
-            {tags.map((tag) => (
-              <Box
-                key={tag}
-                px={2}
-                py={1}
-                bg="rgba(255,255,255,0.05)"
-                borderRadius="md"
-                fontSize="xs"
-                fontFamily="var(--font-mono)"
-                color="var(--text-secondary)"
-              >
-                {tag}
-              </Box>
-            ))}
-          </Flex>
-        </Box>
-      </TiltCard>
+      {link ? (
+        <a href={link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+          <TiltCard glowColor={featured ? "var(--glow-cyan)" : "var(--soft-lavender)"}>
+            {cardContent}
+          </TiltCard>
+        </a>
+      ) : (
+        <TiltCard glowColor={featured ? "var(--glow-cyan)" : "var(--soft-lavender)"}>
+          {cardContent}
+        </TiltCard>
+      )}
     </motion.div>
   );
 }
@@ -140,6 +164,7 @@ export function Projects() {
                 description={project.description}
                 tags={project.tags}
                 index={index}
+                link={project.link}
                 featured
               />
             ))}
@@ -166,6 +191,7 @@ export function Projects() {
                     description={project.description}
                     tags={project.tags}
                     index={index + featuredProjects.length}
+                    link={project.link}
                   />
                 ))}
               </SimpleGrid>

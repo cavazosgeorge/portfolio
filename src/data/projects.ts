@@ -16,6 +16,7 @@ export const projects: Project[] = [
     description:
       "Interactive 3D visualization of our solar system built with React Three Fiber. Features realistic orbital mechanics, planet selection, and smooth camera controls.",
     tags: ["React", "Three.js", "TypeScript", "WebGL"],
+    link: "https://solar-system.cavazosgeorge.com",
     featured: true,
   },
   {
@@ -24,6 +25,7 @@ export const projects: Project[] = [
     description:
       "A visual thinking and image organization tool with drag-and-drop collections, lightbox viewing, and a warm, intuitive interface.",
     tags: ["React", "TypeScript", "Express", "SQLite"],
+    link: "https://brain-board.cavazosgeorge.com",
     featured: true,
   },
   {
