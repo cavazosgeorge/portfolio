@@ -1,4 +1,4 @@
-# Stage 1: Build
+# Build stage
 FROM oven/bun:1 AS builder
 WORKDIR /app
 COPY package.json bun.lock ./
@@ -6,11 +6,21 @@ RUN bun install --frozen-lockfile
 COPY . .
 RUN bun run build
 
-# Stage 2: Serve
-FROM nginx:alpine
-RUN apk add --no-cache curl && rm /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+# Production stage
+FROM oven/bun:1-slim
+WORKDIR /app
+
+# Copy built assets and server code
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/server ./server
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=3000
+
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://127.0.0.1:3000/health || exit 1
-CMD ["nginx", "-g", "daemon off;"]
+
+# Seed admin on startup if env vars are set, then start server
+CMD bun run db:seed-admin 2>/dev/null; bun run start
