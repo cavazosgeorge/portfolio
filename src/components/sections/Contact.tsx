@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { RevealOnScroll } from "../animations/RevealOnScroll";
 import { MagneticElement } from "../animations/MagneticElement";
+import { useSetting } from "../../hooks/useContent";
 
 const inputStyles = {
   bg: "var(--void-lighter)",
@@ -24,9 +25,25 @@ const inputStyles = {
   transition: "all 0.3s ease",
 };
 
+const DEFAULT_CONTACT = {
+  heading: "Get in Touch",
+  email: "your@email.com",
+  github: "https://github.com/yourusername",
+  linkedin: "https://linkedin.com/in/yourusername",
+};
+
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const { data: contactData } = useSetting("contact");
+
+  const contact = contactData || DEFAULT_CONTACT;
+
+  const socialLinks = [
+    { name: "GitHub", href: contact.github },
+    { name: "LinkedIn", href: contact.linkedin },
+    { name: "Email", href: `mailto:${contact.email}` },
+  ].filter((link) => link.href && link.href !== "mailto:");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -221,11 +238,7 @@ export function Contact() {
           {/* Social links */}
           <RevealOnScroll delay={0.3}>
             <Flex justify="center" gap={6}>
-              {[
-                { name: "GitHub", href: "https://github.com/yourusername" },
-                { name: "LinkedIn", href: "https://linkedin.com/in/yourusername" },
-                { name: "Email", href: "mailto:your@email.com" },
-              ].map((link) => (
+              {socialLinks.map((link) => (
                 <MagneticElement key={link.name} strength={0.3} radius={80}>
                   <Link
                     href={link.href}

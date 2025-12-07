@@ -5,8 +5,9 @@ import { ProjectsEditor } from "./components/ProjectsEditor";
 import { ExperienceEditor } from "./components/ExperienceEditor";
 import { SkillsEditor } from "./components/SkillsEditor";
 import { AboutEditor } from "./components/AboutEditor";
+import { LinksEditor } from "./components/LinksEditor";
 
-type Tab = "projects" | "experience" | "skills" | "about";
+type Tab = "projects" | "experience" | "skills" | "about" | "links";
 
 export function Dashboard() {
   const { user, logout } = useAuth();
@@ -17,6 +18,7 @@ export function Dashboard() {
     { id: "experience", label: "Experience" },
     { id: "skills", label: "Skills" },
     { id: "about", label: "About" },
+    { id: "links", label: "Links" },
   ];
 
   return (
@@ -116,6 +118,7 @@ export function Dashboard() {
             {activeTab === "experience" && <ExperienceEditor />}
             {activeTab === "skills" && <SkillsEditor />}
             {activeTab === "about" && <AboutEditor />}
+            {activeTab === "links" && <LinksEditor />}
           </Box>
         </Flex>
       </Container>
