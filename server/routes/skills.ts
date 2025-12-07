@@ -36,7 +36,7 @@ skills.post("/", async (c) => {
 
   const result = db.run(
     `INSERT INTO skills (name, category, sort_order) VALUES (?, ?, ?)`,
-    [name, category, sort_order || 0]
+    [name, category, sort_order ?? 0]
   );
 
   return c.json({ success: true, id: result.lastInsertRowid }, 201);
@@ -50,7 +50,7 @@ skills.put("/:id", async (c) => {
 
   const result = db.run(
     `UPDATE skills SET name = ?, category = ?, sort_order = ? WHERE id = ?`,
-    [name, category, sort_order || 0, id]
+    [name, category, sort_order ?? 0, id]
   );
 
   if (result.changes === 0) {

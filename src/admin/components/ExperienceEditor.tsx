@@ -122,6 +122,7 @@ export function ExperienceEditor() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Experience>>({});
+  const [technologiesInput, setTechnologiesInput] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -144,6 +145,7 @@ export function ExperienceEditor() {
   const startEdit = (exp: Experience) => {
     setEditingId(exp.id);
     setFormData({ ...exp });
+    setTechnologiesInput((exp.technologies || []).join(", "));
   };
 
   const startNew = () => {
@@ -157,6 +159,7 @@ export function ExperienceEditor() {
       technologies: [],
       sort_order: experience.length,
     });
+    setTechnologiesInput("");
   };
 
   const cancelEdit = () => {
@@ -169,11 +172,17 @@ export function ExperienceEditor() {
     const url = isNew ? "/api/admin/experience" : `/api/admin/experience/${editingId}`;
     const method = isNew ? "POST" : "PUT";
 
+    // Parse technologies from the input string
+    const technologies = technologiesInput
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ ...formData, technologies }),
     });
 
     if (res.ok) {
@@ -332,13 +341,9 @@ export function ExperienceEditor() {
                 Technologies (comma-separated)
               </Text>
               <Input
-                value={(formData.technologies || []).join(", ")}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    technologies: e.target.value.split(",").map((t) => t.trim()).filter(Boolean),
-                  })
-                }
+                value={technologiesInput}
+                onChange={(e) => setTechnologiesInput(e.target.value)}
+                placeholder="e.g., React, TypeScript, Node.js"
                 bg="var(--void)"
                 border="1px solid rgba(255,255,255,0.1)"
                 color="var(--text-primary)"

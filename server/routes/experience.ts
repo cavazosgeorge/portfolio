@@ -57,7 +57,7 @@ experience.post("/", async (c) => {
       period,
       description,
       technologies ? JSON.stringify(technologies) : null,
-      sort_order || 0,
+      sort_order ?? 0,
     ]
   );
 
@@ -80,7 +80,7 @@ experience.put("/:id", async (c) => {
       period,
       description,
       technologies ? JSON.stringify(technologies) : null,
-      sort_order || 0,
+      sort_order ?? 0,
       id,
     ]
   );

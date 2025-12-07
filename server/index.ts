@@ -120,7 +120,7 @@ admin.post("/projects", async (c) => {
       github || null,
       image || null,
       featured ? 1 : 0,
-      sort_order || 0,
+      sort_order ?? 0,
     ]
   );
 
@@ -144,7 +144,7 @@ admin.put("/projects/:id", async (c) => {
       github || null,
       image || null,
       featured ? 1 : 0,
-      sort_order || 0,
+      sort_order ?? 0,
       id,
     ]
   );
@@ -196,7 +196,7 @@ admin.post("/experience", async (c) => {
       period,
       description,
       technologies ? JSON.stringify(technologies) : null,
-      sort_order || 0,
+      sort_order ?? 0,
     ]
   );
 
@@ -218,7 +218,7 @@ admin.put("/experience/:id", async (c) => {
       period,
       description,
       technologies ? JSON.stringify(technologies) : null,
-      sort_order || 0,
+      sort_order ?? 0,
       id,
     ]
   );
@@ -261,7 +261,7 @@ admin.put("/skills/:id", async (c) => {
 
   const result = db.run(
     `UPDATE skills SET name = ?, category = ?, sort_order = ? WHERE id = ?`,
-    [name, category, sort_order || 0, id]
+    [name, category, sort_order ?? 0, id]
   );
 
   if (result.changes === 0) {

@@ -63,7 +63,7 @@ projects.post("/", async (c) => {
       github || null,
       image || null,
       featured ? 1 : 0,
-      sort_order || 0,
+      sort_order ?? 0,
     ]
   );
 
@@ -88,7 +88,7 @@ projects.put("/:id", async (c) => {
       github || null,
       image || null,
       featured ? 1 : 0,
-      sort_order || 0,
+      sort_order ?? 0,
       id,
     ]
   );
