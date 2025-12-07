@@ -5,14 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:server": "bun run --watch server/index.ts",
+    "dev:all": "bun run dev & bun run dev:server",
     "build": "tsc && vite build",
+    "start": "NODE_ENV=production bun run server/index.ts",
+    "db:seed-admin": "bun run server/scripts/seed-admin.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.30.0",
     "@emotion/react": "^11.14.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "better-auth": "^1.4.5",
+    "better-sqlite3": "^12.5.0",
     "framer-motion": "^12.23.25",
+    "hono": "^4.10.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
