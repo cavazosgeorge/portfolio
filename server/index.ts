@@ -230,6 +230,17 @@ admin.put("/experience/:id", async (c) => {
   return c.json({ success: true });
 });
 
+// Delete experience with empty ID (cleanup route) - must come before /:id
+admin.delete("/experience/", (c) => {
+  const result = db.run("DELETE FROM experience WHERE id = ''", []);
+
+  if (result.changes === 0) {
+    return c.json({ error: "No empty experience found" }, 404);
+  }
+
+  return c.json({ success: true, deleted: result.changes });
+});
+
 admin.delete("/experience/:id", (c) => {
   const id = c.req.param("id");
   const result = db.run("DELETE FROM experience WHERE id = ?", [id]);

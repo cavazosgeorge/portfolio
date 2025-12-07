@@ -169,6 +169,13 @@ export function ExperienceEditor() {
 
   const saveExperience = async () => {
     const isNew = editingId === "new";
+
+    // Validate required fields
+    if (isNew && !formData.id?.trim()) {
+      alert("ID (slug) is required");
+      return;
+    }
+
     const url = isNew ? "/api/admin/experience" : `/api/admin/experience/${editingId}`;
     const method = isNew ? "POST" : "PUT";
 
