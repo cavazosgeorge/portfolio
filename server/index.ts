@@ -74,6 +74,20 @@ const admin = new Hono();
 admin.use("*", requireAuth);
 
 // Admin project routes
+admin.post("/projects/reorder", async (c) => {
+  const body = await c.req.json();
+  const { order } = body; // Array of { id, sort_order }
+
+  const stmt = db.query("UPDATE projects SET sort_order = ? WHERE id = ?");
+  db.transaction(() => {
+    for (const item of order as { id: string; sort_order: number }[]) {
+      stmt.run(item.sort_order, item.id);
+    }
+  })();
+
+  return c.json({ success: true });
+});
+
 admin.post("/projects", async (c) => {
   const body = await c.req.json();
   const { id, title, description, tags, link, github, image, featured, sort_order } = body;
@@ -138,6 +152,20 @@ admin.delete("/projects/:id", (c) => {
 });
 
 // Admin experience routes
+admin.post("/experience/reorder", async (c) => {
+  const body = await c.req.json();
+  const { order } = body; // Array of { id, sort_order }
+
+  const stmt = db.query("UPDATE experience SET sort_order = ? WHERE id = ?");
+  db.transaction(() => {
+    for (const item of order as { id: string; sort_order: number }[]) {
+      stmt.run(item.sort_order, item.id);
+    }
+  })();
+
+  return c.json({ success: true });
+});
+
 admin.post("/experience", async (c) => {
   const body = await c.req.json();
   const { id, role, company, period, description, technologies, sort_order } = body;

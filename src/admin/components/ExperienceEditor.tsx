@@ -8,13 +8,127 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import type { Experience } from "../../hooks/useContent";
+
+interface SortableExperienceItemProps {
+  exp: Experience;
+  onEdit: (exp: Experience) => void;
+  onDelete: (id: string) => void;
+}
+
+function SortableExperienceItem({ exp, onEdit, onDelete }: SortableExperienceItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: exp.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <Flex
+      ref={setNodeRef}
+      style={style}
+      p={4}
+      bg="var(--void-lighter)"
+      borderRadius="lg"
+      border="1px solid"
+      borderColor={isDragging ? "var(--glow-cyan)" : "rgba(255,255,255,0.05)"}
+      align="center"
+      justify="space-between"
+    >
+      <Flex align="center" gap={3} flex={1}>
+        {/* Drag handle */}
+        <Box
+          {...attributes}
+          {...listeners}
+          cursor="grab"
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "rgba(255,255,255,0.05)" }}
+          color="var(--text-secondary)"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="4" cy="4" r="1.5" />
+            <circle cx="12" cy="4" r="1.5" />
+            <circle cx="4" cy="8" r="1.5" />
+            <circle cx="12" cy="8" r="1.5" />
+            <circle cx="4" cy="12" r="1.5" />
+            <circle cx="12" cy="12" r="1.5" />
+          </svg>
+        </Box>
+
+        <Box>
+          <Text color="var(--text-primary)" fontWeight="500">
+            {exp.role}
+          </Text>
+          <Text fontSize="sm" color="var(--warm-coral)">
+            {exp.company}
+          </Text>
+          <Text fontSize="xs" color="var(--text-secondary)">
+            {exp.period}
+          </Text>
+        </Box>
+      </Flex>
+
+      <Flex gap={2}>
+        <Button
+          size="sm"
+          variant="ghost"
+          color="var(--text-secondary)"
+          onClick={() => onEdit(exp)}
+        >
+          Edit
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          color="var(--warm-coral)"
+          onClick={() => onDelete(exp.id)}
+        >
+          Delete
+        </Button>
+      </Flex>
+    </Flex>
+  );
+}
 
 export function ExperienceEditor() {
   const [experience, setExperience] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Experience>>({});
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const fetchExperience = async () => {
     const res = await fetch("/api/experience");
@@ -78,6 +192,31 @@ export function ExperienceEditor() {
 
     if (res.ok) {
       await fetchExperience();
+    }
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = experience.findIndex((e) => e.id === active.id);
+      const newIndex = experience.findIndex((e) => e.id === over.id);
+
+      const reordered = arrayMove(experience, oldIndex, newIndex);
+      setExperience(reordered);
+
+      // Send reorder to server
+      const order = reordered.map((e, index) => ({
+        id: e.id,
+        sort_order: index,
+      }));
+
+      await fetch("/api/admin/experience/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ order }),
+      });
     }
   };
 
@@ -229,50 +368,31 @@ export function ExperienceEditor() {
       )}
 
       {/* Experience List */}
-      <VStack align="stretch" gap={2}>
-        {experience.map((exp) => (
-          <Flex
-            key={exp.id}
-            p={4}
-            bg="var(--void-lighter)"
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="rgba(255,255,255,0.05)"
-            align="center"
-            justify="space-between"
-          >
-            <Box>
-              <Text color="var(--text-primary)" fontWeight="500">
-                {exp.role}
-              </Text>
-              <Text fontSize="sm" color="var(--warm-coral)">
-                {exp.company}
-              </Text>
-              <Text fontSize="xs" color="var(--text-secondary)">
-                {exp.period}
-              </Text>
-            </Box>
-            <Flex gap={2}>
-              <Button
-                size="sm"
-                variant="ghost"
-                color="var(--text-secondary)"
-                onClick={() => startEdit(exp)}
-              >
-                Edit
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                color="var(--warm-coral)"
-                onClick={() => deleteExperience(exp.id)}
-              >
-                Delete
-              </Button>
-            </Flex>
-          </Flex>
-        ))}
-      </VStack>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={experience.map((e) => e.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <VStack align="stretch" gap={2}>
+            {experience.map((exp) => (
+              <SortableExperienceItem
+                key={exp.id}
+                exp={exp}
+                onEdit={startEdit}
+                onDelete={deleteExperience}
+              />
+            ))}
+          </VStack>
+        </SortableContext>
+      </DndContext>
+
+      <Text fontSize="xs" color="var(--text-secondary)" fontStyle="italic">
+        Drag to reorder your experience timeline.
+      </Text>
     </VStack>
   );
 }
