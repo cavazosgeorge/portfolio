@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { useSkills } from "../../hooks/useContent";
+import { useSkills, useSetting } from "../../hooks/useContent";
 
 const SkillTag = ({ name, index }: { name: string; index: number }) => (
   <motion.div
@@ -32,8 +32,20 @@ const SkillTag = ({ name, index }: { name: string; index: number }) => (
   </motion.div>
 );
 
+const DEFAULT_ABOUT = {
+  heading: "Building at the intersection of",
+  subheading: "creativity and code",
+  paragraphs: [
+    "I'm a software developer who believes that great code should feel as good as it works. I specialize in building web applications that are both technically robust and genuinely delightful to use.",
+    "When I'm not coding, you'll find me exploring new technologies, contributing to open source, or experimenting with creative coding projects that push the boundaries of what's possible in the browser.",
+  ],
+};
+
 export function About() {
   const { data: skills } = useSkills();
+  const { data: about } = useSetting("about");
+
+  const content = about || DEFAULT_ABOUT;
 
   return (
     <Box
@@ -77,14 +89,14 @@ export function About() {
                 fontWeight="600"
                 lineHeight="1.2"
               >
-                Building at the intersection of
+                {content.heading}
                 <br />
                 <Text as="span" color="var(--glow-cyan)">
-                  creativity
+                  {content.subheading.split(" and ")[0] || "creativity"}
                 </Text>{" "}
                 and{" "}
                 <Text as="span" color="var(--warm-coral)">
-                  code
+                  {content.subheading.split(" and ")[1] || "code"}
                 </Text>
               </Text>
             </Box>
@@ -99,26 +111,16 @@ export function About() {
             <Box flex={1}>
               <RevealOnScroll delay={0.1}>
                 <VStack gap={6} align="stretch">
-                  <Text
-                    fontSize="lg"
-                    color="var(--text-secondary)"
-                    lineHeight="1.8"
-                  >
-                    I'm a software developer who believes that great code should
-                    feel as good as it works. I specialize in building web
-                    applications that are both technically robust and genuinely
-                    delightful to use.
-                  </Text>
-                  <Text
-                    fontSize="lg"
-                    color="var(--text-secondary)"
-                    lineHeight="1.8"
-                  >
-                    When I'm not coding, you'll find me exploring new
-                    technologies, contributing to open source, or experimenting
-                    with creative coding projects that push the boundaries of
-                    what's possible in the browser.
-                  </Text>
+                  {content.paragraphs.map((paragraph, index) => (
+                    <Text
+                      key={index}
+                      fontSize="lg"
+                      color="var(--text-secondary)"
+                      lineHeight="1.8"
+                    >
+                      {paragraph}
+                    </Text>
+                  ))}
                 </VStack>
               </RevealOnScroll>
             </Box>

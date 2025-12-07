@@ -1,7 +1,7 @@
 -- Seed initial site settings
 INSERT INTO site_settings (key, value) VALUES
   ('hero', '{"title":"George Cavazos","subtitle":"Software Developer","tagline":"Building digital experiences that blend creativity with clean code. Crafting interfaces that feel alive."}'),
-  ('about', '{"heading":"About Me","content":"I am a software developer passionate about creating beautiful, functional web applications."}'),
+  ('about', '{"heading":"Building at the intersection of","subheading":"creativity and code","paragraphs":["I''m a software developer who believes that great code should feel as good as it works. I specialize in building web applications that are both technically robust and genuinely delightful to use.","When I''m not coding, you''ll find me exploring new technologies, contributing to open source, or experimenting with creative coding projects that push the boundaries of what''s possible in the browser."]}'),
   ('contact', '{"heading":"Get in Touch","email":"","github":"","linkedin":""}');
 
 -- Seed projects from current data

@@ -40,7 +40,8 @@ export interface SiteSettings {
   };
   about: {
     heading: string;
-    content: string;
+    subheading: string;
+    paragraphs: string[];
   };
   contact: {
     heading: string;
