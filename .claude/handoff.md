@@ -2,16 +2,64 @@
 
 ## Project Info
 - **Name**: Portfolio (Liquid Dreamscape)
-- **Stack**: React 18 + TypeScript + Vite + Bun + Chakra UI + Framer Motion
-- **Quick Start**: `bun run dev` | Build: `bun run build`
+- **Stack**: React 18 + TypeScript + Vite + Bun + Hono + SQLite + Chakra UI + Framer Motion
+- **Quick Start**: `bun run dev` | Build: `bun run build` | Server: `bun run start`
 - **Live URL**: https://portfolio.cavazosgeorge.com
+- **Admin Panel**: https://portfolio.cavazosgeorge.com/admin
 
 ## Current State
 - **Branch**: main
-- **Active Task**: None - all sections complete
-- **Status**: Full portfolio built with all sections, ready for content customization
+- **Active Task**: None - full-stack portfolio with admin panel complete
+- **Status**: Production-ready with persistent SQLite database and admin CMS
 
 ## What Was Done
+
+### Session: 2025-12-07
+
+**Backend & Admin Panel**
+- Added Hono server with full REST API for all content types
+- SQLite database with migrations system (`bun:sqlite`)
+- Admin authentication with session cookies and bcrypt password hashing
+- Admin dashboard with tabbed interface for managing:
+  - Projects (CRUD + drag-and-drop reorder)
+  - Experience (CRUD + drag-and-drop reorder)
+  - Skills (CRUD + drag-and-drop reorder by category)
+  - About content (rich text editor)
+  - Social links (CRUD)
+  - Contact messages (view, mark read, delete, reply via email)
+
+**Drag-and-Drop Reordering**
+- Integrated @dnd-kit/core and @dnd-kit/sortable for all list editors
+- Server-side `/reorder` endpoints to persist sort order
+- Visual drag handles and smooth animations
+
+**Contact Form & Messages**
+- Public contact form posts to `/api/messages`
+- Admin messages viewer with unread count badge in sidebar
+- Expandable message cards with "Reply via Email" mailto links
+- Mark as read/unread functionality
+
+**Deployment Fixes**
+- Removed unused `better-sqlite3` dependency (was causing build failures - uses `bun:sqlite`)
+- Updated Dockerfile from nginx static-only to Bun server for API endpoints
+- Added `VOLUME ["/app/data"]` for SQLite persistence
+- Created `docker-compose.yml` with named volume `portfolio_data`
+- Admin seeding runs on container startup via CMD
+
+**Bug Fixes**
+- Fixed technologies input: couldn't type comma character (was splitting on every keystroke)
+  - Solution: Separate `technologiesInput` string state, parse only on save
+- Fixed sort order reset: editing an item reset its order to 0
+  - Solution: Changed `sort_order || 0` to `sort_order ?? 0` (nullish coalescing)
+- Fixed data persistence: SQLite DB was lost on redeployment
+  - Solution: Docker volume mount for `/app/data`
+
+**Environment Variables (Production)**
+- `DB_PATH=/app/data/portfolio.db` - SQLite database location
+- `ADMIN_EMAIL` - Admin login email
+- `ADMIN_PASSWORD` - Admin login password (hashed on first seed)
+- `NODE_ENV=production`
+- `PORT=3000`
 
 ### Session: 2025-12-06
 
@@ -68,9 +116,8 @@ src/
 ├── styles/global.css              # Colors, fonts, noise, scrollbar
 ├── hooks/
 │   ├── useMousePosition.ts        # Cursor tracking
-│   └── useMagneticEffect.ts       # Magnetic attraction
-├── data/
-│   └── projects.ts                # Project, experience, and skills data
+│   ├── useMagneticEffect.ts       # Magnetic attraction
+│   └── useContent.ts              # API data fetching hooks
 ├── components/
 │   ├── animations/
 │   │   ├── MorphingBlob.tsx
@@ -86,26 +133,55 @@ src/
 │       ├── Projects.tsx
 │       ├── Experience.tsx
 │       └── Contact.tsx
+├── admin/
+│   ├── AdminApp.tsx               # Admin router wrapper
+│   ├── AuthContext.tsx            # Auth state management
+│   ├── Login.tsx                  # Login page
+│   ├── Dashboard.tsx              # Main admin dashboard
+│   └── components/
+│       ├── ProjectsEditor.tsx     # CRUD + reorder
+│       ├── ExperienceEditor.tsx   # CRUD + reorder
+│       ├── SkillsEditor.tsx       # CRUD + reorder by category
+│       ├── AboutEditor.tsx        # Rich text editing
+│       ├── LinksEditor.tsx        # Social links CRUD
+│       └── MessagesViewer.tsx     # Contact messages
 ├── App.tsx
 └── main.tsx
+
+server/
+├── index.ts                       # Hono server entry point
+├── db/
+│   ├── index.ts                   # SQLite connection + migrations
+│   ├── seed-admin.ts              # Admin user seeding script
+│   └── migrations/
+│       └── 001_initial.sql        # Schema: projects, experience, skills, etc.
+└── routes/
+    ├── projects.ts                # /api/admin/projects
+    ├── experience.ts              # /api/admin/experience
+    ├── skills.ts                  # /api/admin/skills
+    ├── about.ts                   # /api/admin/about
+    ├── links.ts                   # /api/admin/links
+    ├── messages.ts                # /api/admin/messages
+    └── auth.ts                    # /api/admin/login, /logout, /me
 ```
 
 ## What's Next
-1. **Customize content** - Update `src/data/projects.ts` with real projects/experience
-2. **Update social links** - Change GitHub/LinkedIn/Email in Contact.tsx
-3. **Add project images** - Add screenshots to project cards if desired
-4. **Mobile menu** - Implement hamburger menu functionality
-5. **Performance optimization** - Code splitting to reduce bundle size
-6. **SEO** - Add meta tags to index.html
+1. **Add real content** - Use admin panel to add projects, experience, skills
+2. **Mobile menu** - Implement hamburger menu functionality
+3. **Performance optimization** - Code splitting to reduce bundle size
+4. **SEO** - Add meta tags to index.html
+5. **Image uploads** - Add file upload for project images (currently URL-based)
 
 ## Don't Break
-- `docker-compose.yaml` must use `.yaml` extension (not `.yml`) for Coolify
-- Port in Coolify must be `3000` with no host port mapping (use expose only)
-- Health check uses `curl` (installed in Dockerfile)
+- `docker-compose.yml` with named volume `portfolio_data` for SQLite persistence
+- Coolify volume mount: `portfolio-data` → `/app/data`
+- Environment variables: `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `DB_PATH`
+- Use `??` (nullish coalescing) not `||` for sort_order (0 is valid)
+- Technologies input uses separate string state, parsed only on save
 - Run `bun install` after dependency changes to sync bun.lock
 
 ## Blockers
 - None
 
 ---
-*Last updated: 2025-12-06*
+*Last updated: 2025-12-07*
