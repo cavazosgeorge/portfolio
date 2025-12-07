@@ -35,6 +35,8 @@ const DEFAULT_CONTACT = {
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const { data: contactData } = useSetting("contact");
 
   const contact = contactData || DEFAULT_CONTACT;
@@ -48,10 +50,25 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setSubmitted(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -168,6 +185,8 @@ export function Contact() {
                         <Input
                           placeholder="Your name"
                           required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           {...inputStyles}
                         />
                       </Box>
@@ -184,6 +203,8 @@ export function Contact() {
                           type="email"
                           placeholder="your@email.com"
                           required
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           {...inputStyles}
                         />
                       </Box>
@@ -203,9 +224,17 @@ export function Contact() {
                         rows={5}
                         required
                         resize="none"
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         {...inputStyles}
                       />
                     </Box>
+
+                    {error && (
+                      <Text color="var(--warm-coral)" fontSize="sm">
+                        {error}
+                      </Text>
+                    )}
 
                     <MagneticElement strength={0.2} radius={100}>
                       <button

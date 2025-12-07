@@ -1,17 +1,42 @@
 import { Box, Container, Flex, Text, VStack, Button } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 import { ProjectsEditor } from "./components/ProjectsEditor";
 import { ExperienceEditor } from "./components/ExperienceEditor";
 import { SkillsEditor } from "./components/SkillsEditor";
 import { AboutEditor } from "./components/AboutEditor";
 import { LinksEditor } from "./components/LinksEditor";
+import { MessagesViewer } from "./components/MessagesViewer";
 
-type Tab = "projects" | "experience" | "skills" | "about" | "links";
+type Tab = "projects" | "experience" | "skills" | "about" | "links" | "messages";
 
 export function Dashboard() {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("projects");
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/messages", { credentials: "include" });
+      if (res.ok) {
+        const messages = await res.json();
+        setUnreadCount(messages.filter((m: { read: number }) => !m.read).length);
+      }
+    } catch {
+      // Ignore errors
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUnreadCount();
+    // Refresh count every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, [fetchUnreadCount]);
+
+  const handleUnreadCountChange = useCallback((count: number) => {
+    setUnreadCount(count);
+  }, []);
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "projects", label: "Projects" },
@@ -19,6 +44,7 @@ export function Dashboard() {
     { id: "skills", label: "Skills" },
     { id: "about", label: "About" },
     { id: "links", label: "Links" },
+    { id: "messages", label: "Messages" },
   ];
 
   return (
@@ -107,7 +133,23 @@ export function Dashboard() {
                   bg: activeTab === tab.id ? "rgba(0,245,212,0.1)" : "rgba(255,255,255,0.05)",
                 }}
               >
-                {tab.label}
+                <Flex align="center" gap={2} w="100%" justify="space-between">
+                  {tab.label}
+                  {tab.id === "messages" && unreadCount > 0 && (
+                    <Box
+                      bg="var(--warm-coral)"
+                      color="white"
+                      fontSize="xs"
+                      px={1.5}
+                      py={0.5}
+                      borderRadius="full"
+                      minW="20px"
+                      textAlign="center"
+                    >
+                      {unreadCount}
+                    </Box>
+                  )}
+                </Flex>
               </Button>
             ))}
           </VStack>
@@ -119,6 +161,7 @@ export function Dashboard() {
             {activeTab === "skills" && <SkillsEditor />}
             {activeTab === "about" && <AboutEditor />}
             {activeTab === "links" && <LinksEditor />}
+            {activeTab === "messages" && <MessagesViewer onUnreadCountChange={handleUnreadCountChange} />}
           </Box>
         </Flex>
       </Container>

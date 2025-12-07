@@ -69,6 +69,22 @@ app.route("/api/experience", experience);
 app.route("/api/skills", skills);
 app.route("/api/settings", settings);
 
+// Public contact form submission
+app.post("/api/contact", async (c) => {
+  const { name, email, message } = await c.req.json();
+
+  if (!name || !email || !message) {
+    return c.json({ error: "Name, email, and message are required" }, 400);
+  }
+
+  db.run(
+    `INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)`,
+    [name, email, message]
+  );
+
+  return c.json({ success: true }, 201);
+});
+
 // Protected admin routes
 const admin = new Hono();
 admin.use("*", requireAuth);
@@ -277,6 +293,38 @@ admin.put("/settings/:key", async (c) => {
      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP`,
     [key, JSON.stringify(body)]
   );
+
+  return c.json({ success: true });
+});
+
+// Admin messages routes
+admin.get("/messages", (c) => {
+  const messages = db
+    .query(
+      `SELECT * FROM contact_messages ORDER BY created_at DESC`
+    )
+    .all();
+  return c.json(messages);
+});
+
+admin.put("/messages/:id/read", (c) => {
+  const id = parseInt(c.req.param("id"));
+  const result = db.run("UPDATE contact_messages SET read = 1 WHERE id = ?", [id]);
+
+  if (result.changes === 0) {
+    return c.json({ error: "Message not found" }, 404);
+  }
+
+  return c.json({ success: true });
+});
+
+admin.delete("/messages/:id", (c) => {
+  const id = parseInt(c.req.param("id"));
+  const result = db.run("DELETE FROM contact_messages WHERE id = ?", [id]);
+
+  if (result.changes === 0) {
+    return c.json({ error: "Message not found" }, 404);
+  }
 
   return c.json({ success: true });
 });
