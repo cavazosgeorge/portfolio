@@ -2,7 +2,7 @@ import { Box, Container, Text, VStack, SimpleGrid, Flex } from "@chakra-ui/react
 import { motion } from "framer-motion";
 import { TiltCard } from "../animations/TiltCard";
 import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { projects } from "../../data/projects";
+import { useProjects } from "../../hooks/useContent";
 
 interface ProjectCardProps {
   title: string;
@@ -116,6 +116,7 @@ function ProjectCard({ title, description, tags, index, featured, link }: Projec
 }
 
 export function Projects() {
+  const { data: projects } = useProjects();
   const featuredProjects = projects.filter((p) => p.featured);
   const otherProjects = projects.filter((p) => !p.featured);
 

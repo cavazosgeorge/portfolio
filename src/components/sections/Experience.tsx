@@ -2,7 +2,7 @@ import { Box, Container, Text, VStack, Flex } from "@chakra-ui/react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { experience } from "../../data/projects";
+import { useExperience } from "../../hooks/useContent";
 
 interface TimelineItemProps {
   role: string;
@@ -142,6 +142,7 @@ function TimelineItem({
 }
 
 export function Experience() {
+  const { data: experience } = useExperience();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

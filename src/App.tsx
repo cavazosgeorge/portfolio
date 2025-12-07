@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Hero } from "./components/sections/Hero";
 import { About } from "./components/sections/About";
@@ -6,8 +7,11 @@ import { Projects } from "./components/sections/Projects";
 import { Experience } from "./components/sections/Experience";
 import { Contact } from "./components/sections/Contact";
 import { ParallaxBlobs } from "./components/animations/ParallaxBlobs";
+import { AuthProvider, useAuth } from "./admin/AuthContext";
+import { Login } from "./admin/Login";
+import { Dashboard } from "./admin/Dashboard";
 
-function App() {
+function Portfolio() {
   return (
     <Box minH="100vh" bg="var(--void)" position="relative">
       {/* Parallax blob background */}
@@ -22,6 +26,45 @@ function App() {
         <Contact />
       </Box>
     </Box>
+  );
+}
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <Box minH="100vh" bg="var(--void)" display="flex" alignItems="center" justifyContent="center">
+        <Box color="var(--text-secondary)">Loading...</Box>
+      </Box>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Portfolio />} />
+          <Route path="/admin/login" element={<Login />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { skills } from "../../data/projects";
+import { useSkills } from "../../hooks/useContent";
 
 const SkillTag = ({ name, index }: { name: string; index: number }) => (
   <motion.div
@@ -33,6 +33,8 @@ const SkillTag = ({ name, index }: { name: string; index: number }) => (
 );
 
 export function About() {
+  const { data: skills } = useSkills();
+
   return (
     <Box
       as="section"
