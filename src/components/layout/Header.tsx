@@ -78,16 +78,25 @@ export function Header() {
             ))}
             <ColorModeToggle />
           </Flex>
-          {/* Mobile toggle - positioned in corner */}
-          <Flex
-            position="absolute"
-            right="1.5rem"
-            display={{ base: "flex", md: "none" }}
-          >
-            <ColorModeToggle />
-          </Flex>
         </Flex>
       </Container>
+
+      {/* Mobile toggle - floating button at bottom right */}
+      <Flex
+        position="fixed"
+        bottom="1.5rem"
+        right="1.5rem"
+        zIndex={101}
+        display={{ base: "flex", md: "none" }}
+        bg="var(--bg-secondary)"
+        borderRadius="full"
+        boxShadow="0 4px 20px rgba(0, 0, 0, 0.15)"
+        p={2}
+        border="1px solid"
+        borderColor="var(--overlay-medium)"
+      >
+        <ColorModeToggle />
+      </Flex>
     </motion.header>
   );
 }
