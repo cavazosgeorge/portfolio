@@ -77,6 +77,7 @@ export function Contact() {
       id="contact"
       py="var(--section-padding)"
       position="relative"
+      overflow="hidden"
     >
       {/* Background glow */}
       <Box

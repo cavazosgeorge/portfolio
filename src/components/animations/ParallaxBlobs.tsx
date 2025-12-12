@@ -21,7 +21,7 @@ export const ParallaxBlobs = memo(function ParallaxBlobs() {
   const x3 = useTransform(scrollY, [0, 3000], [0, isMobile ? 0 : 100]);
   const x4 = useTransform(scrollY, [0, 3000], [0, isMobile ? 0 : -150]);
 
-  // On mobile: render fewer, simpler, static blobs
+  // On mobile: render fewer, simpler, static blobs within viewport bounds
   if (isMobile) {
     return (
       <Box
@@ -31,23 +31,23 @@ export const ParallaxBlobs = memo(function ParallaxBlobs() {
         zIndex={0}
         pointerEvents="none"
       >
-        {/* Just 2 static gradient blobs on mobile for ambient background */}
+        {/* Static gradient blobs - positioned within viewport to prevent overflow */}
         <Box
           position="absolute"
-          top="10%"
-          left="-10%"
-          width="350px"
-          height="350px"
+          top="5%"
+          left="0"
+          width="250px"
+          height="250px"
           background="radial-gradient(circle at center, var(--glow-cyan), transparent 70%)"
           borderRadius="50%"
           opacity={0.4}
         />
         <Box
           position="absolute"
-          top="60%"
-          right="-5%"
-          width="300px"
-          height="300px"
+          top="55%"
+          right="0"
+          width="200px"
+          height="200px"
           background="radial-gradient(circle at center, var(--warm-coral), transparent 70%)"
           borderRadius="50%"
           opacity={0.35}
