@@ -5,13 +5,22 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="George Cavazos - Software Developer. Building digital experiences that blend creativity with clean code." />
-    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="theme-color" id="theme-color" content="#0a0a0f" />
     <!-- Preconnect to Google Fonts for faster font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>George Cavazos | Software Developer</title>
   </head>
   <body>
+    <!-- Blocking script to prevent flash of incorrect color scheme -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('color-mode') || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = theme;
+        document.getElementById('theme-color').setAttribute('content', theme === 'dark' ? '#0a0a0f' : '#faf9f7');
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

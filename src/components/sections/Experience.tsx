@@ -87,7 +87,7 @@ function TimelineItem({
                   key={tech}
                   px={2}
                   py={1}
-                  bg="rgba(255,255,255,0.05)"
+                  bg="var(--overlay-subtle)"
                   borderRadius="md"
                   fontSize="xs"
                   fontFamily="var(--font-mono)"
@@ -167,7 +167,7 @@ export function Experience() {
         top="200px"
         bottom="100px"
         w="2px"
-        bg="var(--void-lighter)"
+        bg="var(--bg-secondary)"
         ml={4}
       >
         <motion.div

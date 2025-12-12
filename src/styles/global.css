@@ -1,16 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Colors */
-  --void: #0a0a0f;
-  --void-lighter: #12121a;
-  --glow-cyan: #00f5d4;
-  --glow-cyan-dim: rgba(0, 245, 212, 0.15);
-  --warm-coral: #ff6b6b;
-  --soft-lavender: #c8b6ff;
-  --text-primary: #f0f0ff;
-  --text-secondary: rgba(240, 240, 255, 0.6);
-
   /* Typography */
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Outfit', sans-serif;
@@ -22,6 +12,60 @@
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Dark theme (default) */
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-elevated: #1a1a24;
+
+  /* Legacy aliases for compatibility */
+  --void: #0a0a0f;
+  --void-lighter: #12121a;
+
+  /* Text */
+  --text-primary: #f0f0ff;
+  --text-secondary: rgba(240, 240, 255, 0.6);
+  --text-on-accent: #0a0a0f;
+
+  /* Accents */
+  --glow-cyan: #00f5d4;
+  --glow-cyan-dim: rgba(0, 245, 212, 0.15);
+  --warm-coral: #ff6b6b;
+  --soft-lavender: #c8b6ff;
+
+  /* Overlays */
+  --overlay-subtle: rgba(255, 255, 255, 0.05);
+  --overlay-medium: rgba(255, 255, 255, 0.1);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  /* Backgrounds - warm, soft cream tones */
+  --bg-primary: #faf9f7;
+  --bg-secondary: #f3f2ef;
+  --bg-elevated: #ffffff;
+
+  /* Legacy aliases for compatibility */
+  --void: #faf9f7;
+  --void-lighter: #f3f2ef;
+
+  /* Text - softer contrast, warm undertones */
+  --text-primary: #37373f;
+  --text-secondary: rgba(55, 55, 63, 0.6);
+  --text-on-accent: #1a1a2e;
+
+  /* Accents - toned down for comfortable viewing */
+  --glow-cyan: #00b09b;
+  --glow-cyan-dim: rgba(0, 176, 155, 0.12);
+  --warm-coral: #e06060;
+  --soft-lavender: #9a8fc4;
+
+  /* Overlays - very subtle warmth */
+  --overlay-subtle: rgba(55, 55, 63, 0.04);
+  --overlay-medium: rgba(55, 55, 63, 0.08);
 }
 
 *, *::before, *::after {
@@ -37,12 +81,13 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: var(--void);
+  background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Noise texture overlay */
@@ -56,10 +101,15 @@ body::before {
   z-index: 9999;
 }
 
+/* Reduce noise opacity in light mode */
+[data-theme="light"] body::before {
+  opacity: 0.02;
+}
+
 /* Selection */
 ::selection {
   background: var(--glow-cyan);
-  color: var(--void);
+  color: var(--text-on-accent);
 }
 
 /* Scrollbar */
@@ -68,7 +118,7 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--void);
+  background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {

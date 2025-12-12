@@ -48,12 +48,12 @@ export function Dashboard() {
   ];
 
   return (
-    <Box minH="100vh" bg="var(--void)">
+    <Box minH="100vh" bg="var(--bg-primary)">
       {/* Header */}
       <Box
-        bg="var(--void-lighter)"
+        bg="var(--bg-secondary)"
         borderBottom="1px solid"
-        borderColor="rgba(255,255,255,0.1)"
+        borderColor="var(--overlay-medium)"
         position="sticky"
         top={0}
         zIndex={10}
@@ -98,7 +98,7 @@ export function Dashboard() {
                 color="var(--warm-coral)"
                 fontFamily="var(--font-mono)"
                 onClick={logout}
-                _hover={{ bg: "rgba(255,107,107,0.1)" }}
+                _hover={{ bg: "var(--overlay-subtle)" }}
               >
                 Sign Out
               </Button>
@@ -125,12 +125,12 @@ export function Dashboard() {
                 justifyContent="flex-start"
                 variant="ghost"
                 color={activeTab === tab.id ? "var(--glow-cyan)" : "var(--text-secondary)"}
-                bg={activeTab === tab.id ? "rgba(0,245,212,0.1)" : "transparent"}
+                bg={activeTab === tab.id ? "var(--glow-cyan-dim)" : "transparent"}
                 fontFamily="var(--font-mono)"
                 fontSize="sm"
                 onClick={() => setActiveTab(tab.id)}
                 _hover={{
-                  bg: activeTab === tab.id ? "rgba(0,245,212,0.1)" : "rgba(255,255,255,0.05)",
+                  bg: activeTab === tab.id ? "var(--glow-cyan-dim)" : "var(--overlay-subtle)",
                 }}
               >
                 <Flex align="center" gap={2} w="100%" justify="space-between">

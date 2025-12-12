@@ -6,9 +6,9 @@ import { MagneticElement } from "../animations/MagneticElement";
 import { useSetting } from "../../hooks/useContent";
 
 const inputStyles = {
-  bg: "var(--void-lighter)",
+  bg: "var(--bg-secondary)",
   border: "1px solid",
-  borderColor: "rgba(255,255,255,0.1)",
+  borderColor: "var(--overlay-medium)",
   borderRadius: "lg",
   color: "var(--text-primary)",
   fontFamily: "var(--font-body)",
@@ -141,7 +141,7 @@ export function Contact() {
               <Box
                 textAlign="center"
                 p={8}
-                bg="var(--void-lighter)"
+                bg="var(--bg-secondary)"
                 borderRadius="xl"
                 border="1px solid var(--glow-cyan)"
               >
@@ -162,11 +162,11 @@ export function Contact() {
             <RevealOnScroll delay={0.2}>
               <form onSubmit={handleSubmit}>
                 <Box
-                  bg="var(--void-lighter)"
+                  bg="var(--bg-secondary)"
                   p={{ base: 6, md: 8 }}
                   borderRadius="xl"
                   border="1px solid"
-                  borderColor="rgba(255,255,255,0.05)"
+                  borderColor="var(--overlay-subtle)"
                 >
                   <VStack gap={5}>
                     <Flex
@@ -245,7 +245,7 @@ export function Contact() {
                           width: "100%",
                           padding: "12px 32px",
                           background: "var(--glow-cyan)",
-                          color: "var(--void)",
+                          color: "var(--text-on-accent)",
                           fontFamily: "var(--font-display)",
                           fontWeight: 600,
                           fontSize: "1rem",

@@ -17,10 +17,10 @@ function ProjectCard({ title, description, tags, index, featured, link }: Projec
   const cardContent = (
     <Box
       p={6}
-      bg="var(--void-lighter)"
+      bg="var(--bg-secondary)"
       borderRadius="xl"
       border="1px solid"
-      borderColor="rgba(255,255,255,0.05)"
+      borderColor="var(--overlay-subtle)"
       h="100%"
       display="flex"
       flexDirection="column"
@@ -67,7 +67,7 @@ function ProjectCard({ title, description, tags, index, featured, link }: Projec
             key={tag}
             px={2}
             py={1}
-            bg="rgba(255,255,255,0.05)"
+            bg="var(--overlay-subtle)"
             borderRadius="md"
             fontSize="xs"
             fontFamily="var(--font-mono)"

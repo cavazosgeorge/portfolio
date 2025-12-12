@@ -13,7 +13,7 @@ const SkillTag = ({ name, index }: { name: string; index: number }) => (
     <Box
       px={4}
       py={2}
-      bg="var(--void-lighter)"
+      bg="var(--bg-secondary)"
       border="1px solid"
       borderColor="var(--glow-cyan-dim)"
       borderRadius="full"

@@ -13,7 +13,7 @@ import { Dashboard } from "./admin/Dashboard";
 
 function Portfolio() {
   return (
-    <Box minH="100vh" bg="var(--void)" position="relative">
+    <Box minH="100vh" bg="var(--bg-primary)" position="relative">
       {/* Parallax blob background */}
       <ParallaxBlobs />
 
@@ -34,7 +34,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <Box minH="100vh" bg="var(--void)" display="flex" alignItems="center" justifyContent="center">
+      <Box minH="100vh" bg="var(--bg-primary)" display="flex" alignItems="center" justifyContent="center">
         <Box color="var(--text-secondary)">Loading...</Box>
       </Box>
     );

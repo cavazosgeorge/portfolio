@@ -27,14 +27,14 @@ export function Login() {
   };
 
   return (
-    <Box minH="100vh" bg="var(--void)" display="flex" alignItems="center">
+    <Box minH="100vh" bg="var(--bg-primary)" display="flex" alignItems="center">
       <Container maxW="400px">
         <Box
           p={8}
-          bg="var(--void-lighter)"
+          bg="var(--bg-secondary)"
           borderRadius="xl"
           border="1px solid"
-          borderColor="rgba(255,255,255,0.1)"
+          borderColor="var(--overlay-medium)"
         >
           <VStack gap={6} as="form" onSubmit={handleSubmit}>
             <Text
@@ -65,9 +65,9 @@ export function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                bg="var(--void)"
+                bg="var(--bg-primary)"
                 border="1px solid"
-                borderColor="rgba(255,255,255,0.1)"
+                borderColor="var(--overlay-medium)"
                 color="var(--text-primary)"
                 _focus={{
                   borderColor: "var(--glow-cyan)",
@@ -90,9 +90,9 @@ export function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                bg="var(--void)"
+                bg="var(--bg-primary)"
                 border="1px solid"
-                borderColor="rgba(255,255,255,0.1)"
+                borderColor="var(--overlay-medium)"
                 color="var(--text-primary)"
                 _focus={{
                   borderColor: "var(--glow-cyan)",
@@ -106,7 +106,7 @@ export function Login() {
               type="submit"
               w="100%"
               bg="var(--glow-cyan)"
-              color="var(--void)"
+              color="var(--text-on-accent)"
               fontFamily="var(--font-mono)"
               fontWeight="600"
               _hover={{ opacity: 0.9 }}

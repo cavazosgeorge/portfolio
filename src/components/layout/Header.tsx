@@ -1,7 +1,10 @@
 import { Container, Flex, Link } from "@chakra-ui/react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useMemo } from "react";
 import { MagneticElement } from "../animations/MagneticElement";
 import { useIsMobile } from "../../hooks/useIsMobile";
+import { useColorMode } from "../../hooks/useColorMode";
+import { ColorModeToggle } from "./ColorModeToggle";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -10,19 +13,33 @@ const navLinks = [
   { name: "Contact", href: "#contact" },
 ];
 
+// Header background colors for scroll animation
+const headerBgColors = {
+  dark: {
+    mobile: ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.98)"],
+    desktop: ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.9)"],
+  },
+  light: {
+    // Soft cream: #faf9f7 = rgb(250, 249, 247)
+    mobile: ["rgba(250, 249, 247, 0)", "rgba(250, 249, 247, 0.98)"],
+    desktop: ["rgba(250, 249, 247, 0)", "rgba(250, 249, 247, 0.92)"],
+  },
+};
+
 export function Header() {
   const isMobile = useIsMobile();
+  const { colorMode } = useColorMode();
   const { scrollY } = useScroll();
+
+  // Memoize the color array to prevent unnecessary recalculations
+  const bgColors = useMemo(() => {
+    const theme = headerBgColors[colorMode];
+    return isMobile ? theme.mobile : theme.desktop;
+  }, [colorMode, isMobile]);
 
   // On mobile: use solid background (no expensive backdrop-filter)
   // On desktop: keep the animated blur effect
-  const headerBg = useTransform(
-    scrollY,
-    [0, 100],
-    isMobile
-      ? ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.98)"]
-      : ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.9)"]
-  );
+  const headerBg = useTransform(scrollY, [0, 100], bgColors);
 
   return (
     <motion.header
@@ -44,7 +61,7 @@ export function Header() {
           justify="center"
         >
           {/* Navigation - hidden on mobile since content is scrollable */}
-          <Flex as="nav" gap={8} display={{ base: "none", md: "flex" }}>
+          <Flex as="nav" gap={8} align="center" display={{ base: "none", md: "flex" }}>
             {navLinks.map((link) => (
               <MagneticElement key={link.name} strength={0.3} radius={60}>
                 <Link
@@ -59,6 +76,15 @@ export function Header() {
                 </Link>
               </MagneticElement>
             ))}
+            <ColorModeToggle />
+          </Flex>
+          {/* Mobile toggle - positioned in corner */}
+          <Flex
+            position="absolute"
+            right="1.5rem"
+            display={{ base: "flex", md: "none" }}
+          >
+            <ColorModeToggle />
           </Flex>
         </Flex>
       </Container>

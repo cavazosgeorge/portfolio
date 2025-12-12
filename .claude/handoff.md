@@ -9,12 +9,47 @@
 
 ## Current State
 - **Branch**: main
-- **Active Task**: None - full-stack portfolio with admin panel complete
-- **Status**: Production-ready with persistent SQLite database and admin CMS
+- **Active Task**: None - light/dark mode toggle implemented
+- **Status**: Production-ready with persistent SQLite database, admin CMS, and light mode support
 
 ## What Was Done
 
 ### Session: 2025-12-12
+
+**Light/Dark Mode Implementation**
+Complete theme switching system with performance optimizations:
+
+- **Blocking Script** (`index.html`) - Prevents flash of incorrect color scheme by reading localStorage before React hydrates
+- **CSS Variables** (`global.css`) - Refactored to use `[data-theme]` attribute scopes for light/dark themes
+- **useColorMode Hook** (`src/hooks/useColorMode.ts`) - React hook for color mode state, toggle, and localStorage persistence
+- **ColorModeToggle** (`src/components/layout/ColorModeToggle.tsx`) - Animated sun/moon toggle with Framer Motion
+- **Header Updates** (`src/components/layout/Header.tsx`) - Added toggle + fixed `useTransform` to use dynamic color arrays per theme
+- **Semantic Variables** - Introduced `--bg-primary`, `--bg-secondary`, `--overlay-subtle`, `--overlay-medium`, `--text-on-accent`
+
+**Files Modified:**
+- `index.html` - Added blocking script, theme-color meta tag with id
+- `src/styles/global.css` - `[data-theme="dark"]` and `[data-theme="light"]` scopes
+- `src/hooks/useColorMode.ts` (new)
+- `src/components/layout/ColorModeToggle.tsx` (new)
+- `src/components/layout/Header.tsx` - Toggle + dynamic header bg colors
+- `src/App.tsx` - Updated to use semantic variables
+- `src/components/sections/Contact.tsx` - Replaced hardcoded RGBA
+- `src/components/sections/Projects.tsx` - Replaced hardcoded RGBA
+- `src/components/sections/Experience.tsx` - Replaced hardcoded RGBA
+- `src/components/sections/About.tsx` - Replaced `--void-lighter` with `--bg-secondary`
+- `src/admin/Login.tsx` - Updated to use semantic variables
+- `src/admin/Dashboard.tsx` - Updated to use semantic variables
+
+**Color Palette (Light Mode) - Soft & Warm:**
+- `--bg-primary: #faf9f7` (warm cream)
+- `--bg-secondary: #f3f2ef` (soft gray-cream)
+- `--text-primary: #37373f` (soft charcoal)
+- `--text-secondary: rgba(55, 55, 63, 0.6)`
+- Accent colors toned down: `--glow-cyan: #00b09b`, `--warm-coral: #e06060`, `--soft-lavender: #9a8fc4`
+
+**Note:** Accent colors were adjusted to be less harsh on light backgrounds.
+
+---
 
 **Mobile Performance Optimization**
 Comprehensive performance overhaul to eliminate lag, flickering, and jank on mobile devices (especially iOS):
@@ -30,6 +65,15 @@ Comprehensive performance overhaul to eliminate lag, flickering, and jank on mob
 - **Added React.memo** - To `MorphingBlob`, `ParallaxBlobs`, `TiltCard`, `MagneticElement`
 - **Font preconnect** - Added preconnect hints to `index.html` for faster Google Fonts loading
 
+**Header Cleanup**
+- Removed unused hamburger menu from mobile view (nav is hidden on mobile, content is scrollable)
+
+**Mobile Horizontal Overflow Fix**
+Fixed horizontal scrollbar and white column appearing on right side of mobile viewport:
+- **ParallaxBlobs** - Changed mobile blob positioning from negative (`left="-10%"`, `right="-5%"`) to positive (`left="0"`, `right="0"`), reduced sizes from 350px/300px to 250px/200px
+- **global.css** - Added `overflow-x: hidden` to `html` element (was only on `body`)
+- **Contact.tsx** - Added `overflow="hidden"` to section container to clip 600px background glow
+
 **Files Modified:**
 - `src/hooks/useIsMobile.ts` (new)
 - `src/hooks/useMousePosition.ts`
@@ -39,6 +83,7 @@ Comprehensive performance overhaul to eliminate lag, flickering, and jank on mob
 - `src/components/animations/TiltCard.tsx`
 - `src/components/animations/MagneticElement.tsx`
 - `src/components/layout/Header.tsx`
+- `src/components/sections/Contact.tsx`
 - `src/styles/global.css`
 - `index.html`
 
@@ -195,10 +240,9 @@ server/
 
 ## What's Next
 1. **Add real content** - Use admin panel to add projects, experience, skills
-2. **Mobile menu** - Implement hamburger menu functionality
-3. **Performance optimization** - Code splitting to reduce bundle size
-4. **SEO** - Add meta tags to index.html
-5. **Image uploads** - Add file upload for project images (currently URL-based)
+2. **Code splitting** - Reduce bundle size (currently 807KB)
+3. **SEO** - Add meta tags to index.html
+4. **Image uploads** - Add file upload for project images (currently URL-based)
 
 ## Don't Break
 - `docker-compose.yml` with named volume `portfolio_data` for SQLite persistence
@@ -207,9 +251,12 @@ server/
 - Use `??` (nullish coalescing) not `||` for sort_order (0 is valid)
 - Technologies input uses separate string state, parsed only on save
 - Run `bun install` after dependency changes to sync bun.lock
+- **Light Mode**: Blocking script in `index.html` must run before React to prevent flash
+- **Light Mode**: `[data-theme]` attribute on `<html>` controls theme (not class)
+- **Light Mode**: Header's `useTransform` needs color arrays per theme (can't use CSS vars)
 
 ## Blockers
 - None
 
 ---
-*Last updated: 2025-12-07*
+*Last updated: 2025-12-12*
