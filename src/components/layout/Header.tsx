@@ -1,6 +1,7 @@
 import { Box, Container, Flex, Link } from "@chakra-ui/react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { MagneticElement } from "../animations/MagneticElement";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -10,13 +11,18 @@ const navLinks = [
 ];
 
 export function Header() {
+  const isMobile = useIsMobile();
   const { scrollY } = useScroll();
+
+  // On mobile: use solid background (no expensive backdrop-filter)
+  // On desktop: keep the animated blur effect
   const headerBg = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.9)"]
+    isMobile
+      ? ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.98)"]
+      : ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.9)"]
   );
-  const headerBlur = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(10px)"]);
 
   return (
     <motion.header
@@ -27,7 +33,8 @@ export function Header() {
         right: 0,
         zIndex: 100,
         backgroundColor: headerBg,
-        backdropFilter: headerBlur,
+        // Only apply backdrop-filter on desktop - it's extremely expensive on iOS
+        backdropFilter: isMobile ? "none" : "blur(10px)",
       }}
     >
       <Container maxW="container.xl">

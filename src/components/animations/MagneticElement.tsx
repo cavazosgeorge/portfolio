@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useRef, ReactNode } from "react";
+import { useRef, ReactNode, memo } from "react";
 import { useMagneticEffect } from "../../hooks/useMagneticEffect";
 
 interface MagneticElementProps {
@@ -11,7 +11,7 @@ interface MagneticElementProps {
   onClick?: () => void;
 }
 
-export function MagneticElement({
+export const MagneticElement = memo(function MagneticElement({
   children,
   strength = 0.3,
   radius = 150,
@@ -42,4 +42,4 @@ export function MagneticElement({
       {children}
     </motion.div>
   );
-}
+});

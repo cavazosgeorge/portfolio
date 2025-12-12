@@ -14,6 +14,34 @@
 
 ## What Was Done
 
+### Session: 2025-12-12
+
+**Mobile Performance Optimization**
+Comprehensive performance overhaul to eliminate lag, flickering, and jank on mobile devices (especially iOS):
+
+- **Created `useIsMobile` hook** - Detects mobile/touch devices via media query + touch capability
+- **Optimized MorphingBlob** - Replaced expensive `filter: blur(60px)` with `radial-gradient()`, disabled morphing animation on mobile, added `React.memo`
+- **Fixed Header backdrop-filter** - Removed animated `backdrop-filter` on mobile (extremely expensive on iOS), uses solid background instead
+- **Throttled mouse events** - Added 16ms throttle to `useMousePosition`, skips tracking entirely on touch devices
+- **Optimized useMagneticEffect** - Cached `getBoundingClientRect()` (only updates on scroll/resize), skips on touch devices
+- **Simplified ParallaxBlobs** - Mobile renders 2 static gradient blobs instead of 4 animated parallax blobs, added `React.memo`
+- **Optimized TiltCard** - Disables 3D tilt effect on mobile, caches rect dimensions, renders simple card without expensive shadows, added `React.memo`
+- **Mobile CSS optimizations** - Removed noise texture (`feTurbulence` SVG), native scroll behavior on mobile
+- **Added React.memo** - To `MorphingBlob`, `ParallaxBlobs`, `TiltCard`, `MagneticElement`
+- **Font preconnect** - Added preconnect hints to `index.html` for faster Google Fonts loading
+
+**Files Modified:**
+- `src/hooks/useIsMobile.ts` (new)
+- `src/hooks/useMousePosition.ts`
+- `src/hooks/useMagneticEffect.ts`
+- `src/components/animations/MorphingBlob.tsx`
+- `src/components/animations/ParallaxBlobs.tsx`
+- `src/components/animations/TiltCard.tsx`
+- `src/components/animations/MagneticElement.tsx`
+- `src/components/layout/Header.tsx`
+- `src/styles/global.css`
+- `index.html`
+
 ### Session: 2025-12-07
 
 **Backend & Admin Panel**

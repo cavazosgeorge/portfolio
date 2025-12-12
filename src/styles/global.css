@@ -93,6 +93,19 @@ body::before {
   padding-right: 1.5rem !important;
 }
 
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  html {
+    /* Native scroll on mobile - smoother than JS-driven smooth scroll */
+    scroll-behavior: auto;
+  }
+
+  /* Remove expensive noise texture on mobile */
+  body::before {
+    display: none;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

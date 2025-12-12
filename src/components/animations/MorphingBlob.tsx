@@ -1,4 +1,6 @@
 import { Box } from "@chakra-ui/react";
+import { memo } from "react";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 interface MorphingBlobProps {
   color: string;
@@ -11,7 +13,7 @@ interface MorphingBlobProps {
   duration?: number;
 }
 
-export function MorphingBlob({
+export const MorphingBlob = memo(function MorphingBlob({
   color,
   size,
   top,
@@ -21,6 +23,28 @@ export function MorphingBlob({
   delay = 0,
   duration = 20,
 }: MorphingBlobProps) {
+  const isMobile = useIsMobile();
+
+  // On mobile: use radial-gradient instead of expensive blur filter
+  // and disable morphing animation
+  if (isMobile) {
+    return (
+      <Box
+        position="absolute"
+        top={top}
+        left={left}
+        right={right}
+        bottom={bottom}
+        width={`${size}px`}
+        height={`${size}px`}
+        background={`radial-gradient(circle at center, ${color}, transparent 70%)`}
+        borderRadius="50%"
+        opacity={0.5}
+        pointerEvents="none"
+      />
+    );
+  }
+
   return (
     <Box
       position="absolute"
@@ -30,13 +54,13 @@ export function MorphingBlob({
       bottom={bottom}
       width={`${size}px`}
       height={`${size}px`}
-      background={color}
+      background={`radial-gradient(circle at center, ${color} 0%, transparent 70%)`}
       borderRadius="60% 40% 30% 70% / 60% 30% 70% 40%"
-      filter="blur(60px)"
       opacity={0.6}
       animation={`morph ${duration}s ease-in-out infinite`}
       animationDelay={`${delay}s`}
       pointerEvents="none"
+      willChange="transform"
       css={{
         "@keyframes morph": {
           "0%, 100%": {
@@ -59,4 +83,4 @@ export function MorphingBlob({
       }}
     />
   );
-}
+});
