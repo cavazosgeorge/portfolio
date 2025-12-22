@@ -7,6 +7,7 @@ const CATEGORIES = [
   { value: "frontend", label: "Frontend" },
   { value: "backend", label: "Backend" },
   { value: "devops", label: "DevOps" },
+  { value: "ai", label: "AI" },
 ];
 
 const SkillTag = ({ name, index }: { name: string; index: number }) => (
