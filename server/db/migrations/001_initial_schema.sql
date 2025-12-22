@@ -15,6 +15,7 @@ CREATE TABLE projects (
   github TEXT,
   image TEXT,
   featured INTEGER DEFAULT 0,
+  draft INTEGER DEFAULT 0,
   sort_order INTEGER DEFAULT 0,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
