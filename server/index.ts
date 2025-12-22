@@ -106,11 +106,11 @@ admin.post("/projects/reorder", async (c) => {
 
 admin.post("/projects", async (c) => {
   const body = await c.req.json();
-  const { id, title, description, tags, link, github, image, featured, sort_order } = body;
+  const { id, title, description, tags, link, github, image, featured, draft, sort_order } = body;
 
   db.run(
-    `INSERT INTO projects (id, title, description, tags, link, github, image, featured, sort_order)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO projects (id, title, description, tags, link, github, image, featured, draft, sort_order)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       id,
       title,
@@ -120,6 +120,7 @@ admin.post("/projects", async (c) => {
       github || null,
       image || null,
       featured ? 1 : 0,
+      (draft ?? false) ? 1 : 0,
       sort_order ?? 0,
     ]
   );
@@ -130,11 +131,11 @@ admin.post("/projects", async (c) => {
 admin.put("/projects/:id", async (c) => {
   const id = c.req.param("id");
   const body = await c.req.json();
-  const { title, description, tags, link, github, image, featured, sort_order } = body;
+  const { title, description, tags, link, github, image, featured, draft, sort_order } = body;
 
   const result = db.run(
     `UPDATE projects
-     SET title = ?, description = ?, tags = ?, link = ?, github = ?, image = ?, featured = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
+     SET title = ?, description = ?, tags = ?, link = ?, github = ?, image = ?, featured = ?, draft = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
      WHERE id = ?`,
     [
       title,
@@ -144,6 +145,7 @@ admin.put("/projects/:id", async (c) => {
       github || null,
       image || null,
       featured ? 1 : 0,
+      (draft ?? false) ? 1 : 0,
       sort_order ?? 0,
       id,
     ]
