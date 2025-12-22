@@ -9,10 +9,33 @@
 
 ## Current State
 - **Branch**: main
+- **Active Task**: None - draft projects feature implemented
+- **Status**: Production-ready with persistent SQLite database, admin CMS, and draft projects support
 - **Active Task**: None - light/dark mode toggle implemented
 - **Status**: Production-ready with persistent SQLite database, admin CMS, and light mode support
 
 ## What Was Done
+
+### Session: 2025-12-21
+
+**Draft Projects Feature**
+Added ability to mark projects as "drafts" in the admin panel. Draft projects appear on the public site but are not clickable and show a "Coming soon" badge.
+
+**Changes:**
+- `server/db/migrations/002_add_draft_column.sql` (new) - Migration to add `draft INTEGER DEFAULT 0` column
+- `src/hooks/useContent.ts` - Added `draft: boolean` to Project interface
+- `server/routes/projects.ts` - Added draft field to ProjectRow, GET/POST/PUT endpoints
+- `src/admin/components/ProjectsEditor.tsx` - Added draft checkbox and DRAFT badge in list
+- `src/components/sections/Projects.tsx` - Added "COMING SOON" badge, disabled links for drafts
+
+**Behavior:**
+- Projects can be both featured AND draft
+- Draft cards show "COMING SOON" badge above title
+- Draft cards are NOT clickable (link is ignored)
+- "View Project →" is hidden for draft cards
+- Existing projects default to `draft = 0` (published)
+
+---
 
 ### Session: 2025-12-12
 

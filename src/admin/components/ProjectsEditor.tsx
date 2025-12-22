@@ -92,6 +92,11 @@ function SortableProjectItem({ project, onEdit, onDelete }: SortableProjectItemP
                 FEATURED
               </Text>
             )}
+            {project.draft && (
+              <Text fontSize="xs" color="var(--warm-coral)">
+                DRAFT
+              </Text>
+            )}
           </Flex>
           <Text fontSize="sm" color="var(--text-secondary)">
             {project.tags.join(", ")}
@@ -163,6 +168,7 @@ export function ProjectsEditor() {
       link: "",
       github: "",
       featured: false,
+      draft: false,
       sort_order: projects.length,
     });
   };
@@ -366,16 +372,29 @@ export function ProjectsEditor() {
                   color="var(--text-primary)"
                 />
               </Box>
-              <Flex align="center" gap={2} mt={6}>
-                <input
-                  type="checkbox"
-                  checked={formData.featured || false}
-                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  style={{ accentColor: "var(--glow-cyan)" }}
-                />
-                <Text color="var(--text-secondary)" fontSize="sm">
-                  Featured
-                </Text>
+              <Flex align="center" gap={4} mt={6}>
+                <Flex align="center" gap={2}>
+                  <input
+                    type="checkbox"
+                    checked={formData.featured || false}
+                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    style={{ accentColor: "var(--glow-cyan)" }}
+                  />
+                  <Text color="var(--text-secondary)" fontSize="sm">
+                    Featured
+                  </Text>
+                </Flex>
+                <Flex align="center" gap={2}>
+                  <input
+                    type="checkbox"
+                    checked={formData.draft || false}
+                    onChange={(e) => setFormData({ ...formData, draft: e.target.checked })}
+                    style={{ accentColor: "var(--warm-coral)" }}
+                  />
+                  <Text color="var(--text-secondary)" fontSize="sm">
+                    Draft
+                  </Text>
+                </Flex>
               </Flex>
             </Flex>
 
