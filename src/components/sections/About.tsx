@@ -169,7 +169,6 @@ export function About() {
                             color="var(--glow-cyan)"
                             mb={3}
                             letterSpacing="0.1em"
-                            opacity={0.8}
                           >
                             {category.label.toUpperCase()}
                           </Text>
