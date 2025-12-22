@@ -1,7 +1,13 @@
 import { Box, Container, Flex, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { useSkills, useSetting } from "../../hooks/useContent";
+import { useSkills, useSetting, type Skill } from "../../hooks/useContent";
+
+const CATEGORIES = [
+  { value: "frontend", label: "Frontend" },
+  { value: "backend", label: "Backend" },
+  { value: "devops", label: "DevOps" },
+];
 
 const SkillTag = ({ name, index }: { name: string; index: number }) => (
   <motion.div
@@ -46,6 +52,16 @@ export function About() {
   const { data: about } = useSetting("about");
 
   const content = about || DEFAULT_ABOUT;
+
+  // Group skills by category
+  const groupedSkills = skills.reduce(
+    (acc, skill) => {
+      if (!acc[skill.category]) acc[skill.category] = [];
+      acc[skill.category].push(skill);
+      return acc;
+    },
+    {} as Record<string, Skill[]>
+  );
 
   return (
     <Box
@@ -132,18 +148,45 @@ export function About() {
                   fontSize="sm"
                   fontFamily="var(--font-mono)"
                   color="var(--text-secondary)"
-                  mb={4}
+                  mb={6}
                   letterSpacing="0.1em"
                 >
                   TECHNOLOGIES I WORK WITH
                 </Text>
-                <Wrap gap={3}>
-                  {skills.map((skill, index) => (
-                    <WrapItem key={skill.name}>
-                      <SkillTag name={skill.name} index={index} />
-                    </WrapItem>
-                  ))}
-                </Wrap>
+                <VStack align="stretch" gap={6}>
+                  {(() => {
+                    let globalIndex = 0;
+                    return CATEGORIES.map((category) => {
+                      const categorySkills = groupedSkills[category.value] || [];
+                      if (categorySkills.length === 0) return null;
+
+                      return (
+                        <Box key={category.value}>
+                          <Text
+                            fontSize="xs"
+                            fontFamily="var(--font-mono)"
+                            color="var(--glow-cyan)"
+                            mb={3}
+                            letterSpacing="0.1em"
+                            opacity={0.8}
+                          >
+                            {category.label.toUpperCase()}
+                          </Text>
+                          <Wrap gap={3}>
+                            {categorySkills.map((skill) => {
+                              const currentIndex = globalIndex++;
+                              return (
+                                <WrapItem key={skill.name}>
+                                  <SkillTag name={skill.name} index={currentIndex} />
+                                </WrapItem>
+                              );
+                            })}
+                          </Wrap>
+                        </Box>
+                      );
+                    });
+                  })()}
+                </VStack>
               </RevealOnScroll>
             </Box>
           </Flex>
