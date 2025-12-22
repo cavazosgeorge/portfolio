@@ -10,10 +10,11 @@ interface ProjectCardProps {
   tags: string[];
   index: number;
   featured?: boolean;
+  draft?: boolean;
   link?: string;
 }
 
-function ProjectCard({ title, description, tags, index, featured, link }: ProjectCardProps) {
+function ProjectCard({ title, description, tags, index, featured, draft, link }: ProjectCardProps) {
   const cardContent = (
     <Box
       p={6}
@@ -35,6 +36,19 @@ function ProjectCard({ title, description, tags, index, featured, link }: Projec
           mb={3}
         >
           ★ FEATURED
+        </Text>
+      )}
+
+      {/* Draft badge */}
+      {draft && (
+        <Text
+          fontSize="xs"
+          fontFamily="var(--font-mono)"
+          color="var(--text-secondary)"
+          letterSpacing="0.1em"
+          mb={3}
+        >
+          COMING SOON
         </Text>
       )}
 
@@ -76,7 +90,7 @@ function ProjectCard({ title, description, tags, index, featured, link }: Projec
             {tag}
           </Box>
         ))}
-        {link && (
+        {link && !draft && (
           <Box
             ml="auto"
             fontSize="xs"
@@ -100,7 +114,7 @@ function ProjectCard({ title, description, tags, index, featured, link }: Projec
       viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      {link ? (
+      {link && !draft ? (
         <a href={link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
           <TiltCard glowColor={featured ? "var(--glow-cyan)" : "var(--soft-lavender)"}>
             {cardContent}
@@ -167,6 +181,7 @@ export function Projects() {
                 index={index}
                 link={project.link}
                 featured
+                draft={project.draft}
               />
             ))}
           </SimpleGrid>
@@ -193,6 +208,7 @@ export function Projects() {
                     tags={project.tags}
                     index={index + featuredProjects.length}
                     link={project.link}
+                    draft={project.draft}
                   />
                 ))}
               </SimpleGrid>

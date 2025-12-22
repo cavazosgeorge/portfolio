@@ -12,6 +12,7 @@ export interface Project {
   github?: string;
   image?: string;
   featured: boolean;
+  draft: boolean;
   sort_order: number;
 }
 
