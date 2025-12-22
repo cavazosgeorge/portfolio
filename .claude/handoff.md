@@ -26,11 +26,11 @@ Added ability to mark projects as "drafts" in the admin panel. Draft projects ap
 - `src/hooks/useContent.ts` - Added `draft: boolean` to Project interface
 - `server/routes/projects.ts` - Added draft field to ProjectRow, GET/POST/PUT endpoints
 - `src/admin/components/ProjectsEditor.tsx` - Added draft checkbox and DRAFT badge in list
-- `src/components/sections/Projects.tsx` - Added "COMING SOON" badge, disabled links for drafts
+- `src/components/sections/Projects.tsx` - Added "Coming soon..." text for drafts, disabled links
 
 **Behavior:**
 - Projects can be both featured AND draft
-- Draft cards show "COMING SOON" badge above title
+- Draft cards show "Coming soon..." where "View Project" link normally appears
 - Draft cards are NOT clickable (link is ignored)
 - "View Project →" is hidden for draft cards
 - Existing projects default to `draft = 0` (published)
