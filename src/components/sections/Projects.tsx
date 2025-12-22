@@ -82,7 +82,7 @@ function ProjectCard({ title, description, tags, index, featured, draft, link }:
             ml="auto"
             fontSize="xs"
             fontFamily="var(--font-mono)"
-            color="var(--text-secondary)"
+            color="var(--glow-cyan)"
             display="flex"
             alignItems="center"
             gap={1}
