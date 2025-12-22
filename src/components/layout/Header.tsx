@@ -43,6 +43,7 @@ export function Header() {
 
   return (
     <motion.header
+      key={colorMode} // Force re-mount when color mode changes to update transform
       style={{
         position: "fixed",
         top: 0,

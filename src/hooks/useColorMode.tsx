@@ -1,6 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 
 type ColorMode = "light" | "dark";
+
+interface ColorModeContextValue {
+  colorMode: ColorMode;
+  toggleColorMode: () => void;
+  setColorMode: (mode: ColorMode) => void;
+  isDark: boolean;
+  isLight: boolean;
+}
+
+const ColorModeContext = createContext<ColorModeContextValue | null>(null);
 
 function getInitialColorMode(): ColorMode {
   if (typeof window === "undefined") return "dark";
@@ -8,14 +18,14 @@ function getInitialColorMode(): ColorMode {
   return stored || "dark";
 }
 
-export function useColorMode() {
-  const [colorMode, setColorMode] = useState<ColorMode>(getInitialColorMode);
+export function ColorModeProvider({ children }: { children: ReactNode }) {
+  const [colorMode, setColorModeState] = useState<ColorMode>(getInitialColorMode);
 
   // Sync with DOM on mount (in case SSR/hydration mismatch)
   useEffect(() => {
     const current = document.documentElement.getAttribute("data-theme") as ColorMode;
     if (current && current !== colorMode) {
-      setColorMode(current);
+      setColorModeState(current);
     }
   }, []);
 
@@ -36,7 +46,7 @@ export function useColorMode() {
     }
 
     // Update state
-    setColorMode(newMode);
+    setColorModeState(newMode);
   }, [colorMode]);
 
   const setMode = useCallback((mode: ColorMode) => {
@@ -54,14 +64,28 @@ export function useColorMode() {
     }
 
     // Update state
-    setColorMode(mode);
+    setColorModeState(mode);
   }, []);
 
-  return {
+  const value: ColorModeContextValue = {
     colorMode,
     toggleColorMode,
     setColorMode: setMode,
     isDark: colorMode === "dark",
     isLight: colorMode === "light",
   };
+
+  return (
+    <ColorModeContext.Provider value={value}>
+      {children}
+    </ColorModeContext.Provider>
+  );
+}
+
+export function useColorMode(): ColorModeContextValue {
+  const context = useContext(ColorModeContext);
+  if (!context) {
+    throw new Error("useColorMode must be used within a ColorModeProvider");
+  }
+  return context;
 }

@@ -8,6 +8,7 @@ import { Experience } from "./components/sections/Experience";
 import { Contact } from "./components/sections/Contact";
 import { ParallaxBlobs } from "./components/animations/ParallaxBlobs";
 import { AuthProvider, useAuth } from "./admin/AuthContext";
+import { ColorModeProvider } from "./hooks/useColorMode";
 import { Login } from "./admin/Login";
 import { Dashboard } from "./admin/Dashboard";
 
@@ -50,20 +51,22 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Portfolio />} />
-          <Route path="/admin/login" element={<Login />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </AuthProvider>
+      <ColorModeProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Portfolio />} />
+            <Route path="/admin/login" element={<Login />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </AuthProvider>
+      </ColorModeProvider>
     </BrowserRouter>
   );
 }
