@@ -39,19 +39,6 @@ function ProjectCard({ title, description, tags, index, featured, draft, link }:
         </Text>
       )}
 
-      {/* Draft badge */}
-      {draft && (
-        <Text
-          fontSize="xs"
-          fontFamily="var(--font-mono)"
-          color="var(--text-secondary)"
-          letterSpacing="0.1em"
-          mb={3}
-        >
-          COMING SOON
-        </Text>
-      )}
-
       {/* Title */}
       <Text
         fontSize="xl"
@@ -90,7 +77,19 @@ function ProjectCard({ title, description, tags, index, featured, draft, link }:
             {tag}
           </Box>
         ))}
-        {link && !draft && (
+        {draft ? (
+          <Box
+            ml="auto"
+            fontSize="xs"
+            fontFamily="var(--font-mono)"
+            color="var(--text-secondary)"
+            display="flex"
+            alignItems="center"
+            gap={1}
+          >
+            Coming soon...
+          </Box>
+        ) : link && (
           <Box
             ml="auto"
             fontSize="xs"
