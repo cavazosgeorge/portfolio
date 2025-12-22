@@ -17,13 +17,14 @@
 ### Session: 2025-12-22
 
 **Skills Section Categorization**
-Updated the "TECHNOLOGIES I WORK WITH" section to display skills grouped by category (Frontend, Backend, DevOps) instead of one aggregated list.
+Updated the "TECHNOLOGIES I WORK WITH" section to display skills grouped by category (Frontend, Backend, DevOps, AI) instead of one aggregated list.
 
 **Changes:**
 - `src/components/sections/About.tsx` - Added CATEGORIES constant, groupedSkills logic, and categorized rendering with section headers for each skill category
+- `src/admin/components/SkillsEditor.tsx` - Added AI category to admin panel
 
 **Behavior:**
-- Skills are now grouped under Frontend, Backend, and DevOps section headers
+- Skills are now grouped under Frontend, Backend, DevOps, and AI section headers
 - Empty categories are automatically hidden
 - Animation stagger effect preserved across all categories using global index counter
 - Category labels styled in cyan with mono font, matching the design language
