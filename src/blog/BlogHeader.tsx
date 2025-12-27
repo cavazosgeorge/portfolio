@@ -33,6 +33,9 @@ export function BlogHeader() {
   // Get the portfolio URL based on current hostname
   const portfolioUrl = useMemo(() => {
     const hostname = window.location.hostname;
+    if (hostname.startsWith("www.blog.")) {
+      return `https://${hostname.replace("www.blog.", "www.")}`;
+    }
     if (hostname.startsWith("blog.")) {
       return `https://${hostname.replace("blog.", "")}`;
     }

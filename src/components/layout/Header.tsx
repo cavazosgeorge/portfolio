@@ -9,7 +9,7 @@ import { ColorModeToggle } from "./ColorModeToggle";
 const navLinks = [
   { name: "About", href: "#about" },
   { name: "Projects", href: "#projects" },
-  { name: "Blog", href: "https://blog.cavazosgeorge.com", external: true },
+  { name: "Blog", href: "https://www.blog.cavazosgeorge.com", external: true },
   { name: "Experience", href: "#experience" },
   { name: "Contact", href: "#contact" },
 ];

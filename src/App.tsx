@@ -17,7 +17,7 @@ import { BlogPost } from "./blog/BlogPost";
 
 function isBlogSubdomain(): boolean {
   const hostname = window.location.hostname;
-  return hostname.startsWith("blog.");
+  return hostname.startsWith("blog.") || hostname.startsWith("www.blog.");
 }
 
 function Portfolio() {
