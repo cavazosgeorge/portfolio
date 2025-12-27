@@ -9,6 +9,7 @@ import { ColorModeToggle } from "./ColorModeToggle";
 const navLinks = [
   { name: "About", href: "#about" },
   { name: "Projects", href: "#projects" },
+  { name: "Blog", href: "https://blog.cavazosgeorge.com", external: true },
   { name: "Experience", href: "#experience" },
   { name: "Contact", href: "#contact" },
 ];
@@ -67,6 +68,8 @@ export function Header() {
               <MagneticElement key={link.name} strength={0.3} radius={60}>
                 <Link
                   href={link.href}
+                  target={"external" in link && link.external ? "_blank" : undefined}
+                  rel={"external" in link && link.external ? "noopener noreferrer" : undefined}
                   fontFamily="var(--font-mono)"
                   fontSize="sm"
                   color="var(--text-secondary)"

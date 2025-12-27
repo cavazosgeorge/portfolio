@@ -11,6 +11,14 @@ import { AuthProvider, useAuth } from "./admin/AuthContext";
 import { ColorModeProvider } from "./hooks/useColorMode";
 import { Login } from "./admin/Login";
 import { Dashboard } from "./admin/Dashboard";
+import { BlogLayout } from "./blog/BlogLayout";
+import { BlogHome } from "./blog/BlogHome";
+import { BlogPost } from "./blog/BlogPost";
+
+function isBlogSubdomain(): boolean {
+  const hostname = window.location.hostname;
+  return hostname.startsWith("blog.");
+}
 
 function Portfolio() {
   return (
@@ -49,21 +57,36 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+  const isBlog = isBlogSubdomain();
+
   return (
     <BrowserRouter>
       <ColorModeProvider>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Portfolio />} />
-            <Route path="/admin/login" element={<Login />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+            {isBlog ? (
+              // Blog subdomain routes
+              <>
+                <Route path="/" element={<BlogLayout />}>
+                  <Route index element={<BlogHome />} />
+                  <Route path=":slug" element={<BlogPost />} />
+                </Route>
+              </>
+            ) : (
+              // Main portfolio routes
+              <>
+                <Route path="/" element={<Portfolio />} />
+                <Route path="/admin/login" element={<Login />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+              </>
+            )}
           </Routes>
         </AuthProvider>
       </ColorModeProvider>

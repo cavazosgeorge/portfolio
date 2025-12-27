@@ -10,6 +10,7 @@ import { projects } from "./routes/projects";
 import { experience } from "./routes/experience";
 import { skills } from "./routes/skills";
 import { settings } from "./routes/settings";
+import { blog } from "./routes/blog";
 
 // Run migrations on startup
 runMigrations();
@@ -68,6 +69,7 @@ app.route("/api/projects", projects);
 app.route("/api/experience", experience);
 app.route("/api/skills", skills);
 app.route("/api/settings", settings);
+app.route("/api/blog", blog);
 
 // Public contact form submission
 app.post("/api/contact", async (c) => {
@@ -337,6 +339,114 @@ admin.delete("/messages/:id", (c) => {
 
   if (result.changes === 0) {
     return c.json({ error: "Message not found" }, 404);
+  }
+
+  return c.json({ success: true });
+});
+
+// Admin blog routes
+admin.get("/blog", (c) => {
+  // Admin can see all posts including drafts
+  const rows = db
+    .query(
+      `SELECT * FROM blog_posts ORDER BY featured DESC, sort_order ASC, created_at DESC`
+    )
+    .all() as {
+    id: string;
+    title: string;
+    excerpt: string;
+    content: string;
+    tags: string;
+    featured: number;
+    draft: number;
+    sort_order: number;
+    published_at: string | null;
+    created_at: string;
+    updated_at: string;
+  }[];
+
+  const data = rows.map((row) => ({
+    ...row,
+    tags: JSON.parse(row.tags),
+    featured: Boolean(row.featured),
+    draft: Boolean(row.draft),
+  }));
+
+  return c.json(data);
+});
+
+admin.post("/blog/reorder", async (c) => {
+  const body = await c.req.json();
+  const { order } = body;
+
+  const stmt = db.query("UPDATE blog_posts SET sort_order = ? WHERE id = ?");
+  db.transaction(() => {
+    for (const item of order as { id: string; sort_order: number }[]) {
+      stmt.run(item.sort_order, item.id);
+    }
+  })();
+
+  return c.json({ success: true });
+});
+
+admin.post("/blog", async (c) => {
+  const body = await c.req.json();
+  const { id, title, excerpt, content, tags, featured, draft, sort_order, published_at } = body;
+
+  db.run(
+    `INSERT INTO blog_posts (id, title, excerpt, content, tags, featured, draft, sort_order, published_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      id,
+      title,
+      excerpt,
+      content,
+      JSON.stringify(tags || []),
+      featured ? 1 : 0,
+      (draft ?? true) ? 1 : 0,
+      sort_order ?? 0,
+      published_at || null,
+    ]
+  );
+
+  return c.json({ success: true, id }, 201);
+});
+
+admin.put("/blog/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json();
+  const { title, excerpt, content, tags, featured, draft, sort_order, published_at } = body;
+
+  const result = db.run(
+    `UPDATE blog_posts
+     SET title = ?, excerpt = ?, content = ?, tags = ?, featured = ?, draft = ?, sort_order = ?, published_at = ?, updated_at = CURRENT_TIMESTAMP
+     WHERE id = ?`,
+    [
+      title,
+      excerpt,
+      content,
+      JSON.stringify(tags || []),
+      featured ? 1 : 0,
+      (draft ?? true) ? 1 : 0,
+      sort_order ?? 0,
+      published_at || null,
+      id,
+    ]
+  );
+
+  if (result.changes === 0) {
+    return c.json({ error: "Post not found" }, 404);
+  }
+
+  return c.json({ success: true });
+});
+
+admin.delete("/blog/:id", (c) => {
+  const id = c.req.param("id");
+  const result = db.run("DELETE FROM blog_posts WHERE id = ?", [id]);
+
+  if (result.changes === 0) {
+    return c.json({ error: "Post not found" }, 404);
   }
 
   return c.json({ success: true });

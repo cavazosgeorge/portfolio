@@ -7,8 +7,9 @@ import { SkillsEditor } from "./components/SkillsEditor";
 import { AboutEditor } from "./components/AboutEditor";
 import { LinksEditor } from "./components/LinksEditor";
 import { MessagesViewer } from "./components/MessagesViewer";
+import { BlogEditor } from "./components/BlogEditor";
 
-type Tab = "projects" | "experience" | "skills" | "about" | "links" | "messages";
+type Tab = "projects" | "blog" | "experience" | "skills" | "about" | "links" | "messages";
 
 export function Dashboard() {
   const { user, logout } = useAuth();
@@ -40,6 +41,7 @@ export function Dashboard() {
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "projects", label: "Projects" },
+    { id: "blog", label: "Blog" },
     { id: "experience", label: "Experience" },
     { id: "skills", label: "Skills" },
     { id: "about", label: "About" },
@@ -157,6 +159,7 @@ export function Dashboard() {
           {/* Content */}
           <Box flex={1}>
             {activeTab === "projects" && <ProjectsEditor />}
+            {activeTab === "blog" && <BlogEditor />}
             {activeTab === "experience" && <ExperienceEditor />}
             {activeTab === "skills" && <SkillsEditor />}
             {activeTab === "about" && <AboutEditor />}
