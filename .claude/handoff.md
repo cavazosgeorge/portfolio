@@ -9,12 +9,51 @@
 
 ## Current State
 - **Branch**: main
-- **Active Task**: None - draft projects feature implemented
-- **Status**: Production-ready with persistent SQLite database, admin CMS, and draft projects support
-- **Active Task**: None - light/dark mode toggle implemented
-- **Status**: Production-ready with persistent SQLite database, admin CMS, and light mode support
+- **Active Task**: None - blog feature implemented
+- **Status**: Production-ready with blog subdomain at blog.cavazosgeorge.com
+- **Blog URL**: https://blog.cavazosgeorge.com
 
 ## What Was Done
+
+### Session: 2025-12-26
+
+**Blog Feature Implementation**
+Full blog system with subdomain routing at `blog.cavazosgeorge.com`.
+
+**Database:**
+- `server/db/migrations/004_blog_posts.sql` - New table with id, title, excerpt, content (markdown), tags (JSON), featured, draft, sort_order, published_at, timestamps
+
+**Backend:**
+- `server/routes/blog.ts` - Public API routes (`GET /api/blog`, `GET /api/blog/:id`)
+- `server/index.ts` - Added admin CRUD endpoints (`POST/PUT/DELETE /api/admin/blog/:id`, `POST /api/admin/blog/reorder`)
+
+**Admin CMS:**
+- `src/admin/components/BlogEditor.tsx` - Full CRUD editor with drag-and-drop reordering, markdown content textarea, tags, draft/featured toggles
+- `src/admin/Dashboard.tsx` - Added Blog tab to admin panel
+
+**Frontend - Blog Site:**
+- `src/blog/BlogLayout.tsx` - Blog wrapper with header and parallax background
+- `src/blog/BlogHeader.tsx` - Blog navigation with "Portfolio" link back to main site
+- `src/blog/BlogHome.tsx` - Post listing with featured section and grid layout
+- `src/blog/BlogPost.tsx` - Individual post page with markdown rendering
+- `src/blog/components/BlogCard.tsx` - Post card with TiltCard animation
+
+**Markdown Rendering:**
+- `src/components/markdown/MarkdownRenderer.tsx` - Styled markdown with syntax highlighting
+- Dependencies: `react-markdown`, `remark-gfm`, `rehype-highlight`
+
+**Subdomain Routing:**
+- `src/App.tsx` - Added `isBlogSubdomain()` detection, conditional routing for blog vs portfolio
+- `src/components/layout/Header.tsx` - Added "Blog" link to portfolio navigation (external link)
+
+**Bug Fix:**
+- Fixed placeholder text visibility in BlogEditor dark mode with `_placeholder={{ color: "var(--text-secondary)" }}`
+
+**Deployment:**
+- Configured Coolify to accept both `cavazosgeorge.com` and `blog.cavazosgeorge.com`
+- Same Docker container serves both domains via hostname detection
+
+---
 
 ### Session: 2025-12-22
 
@@ -279,14 +318,15 @@ server/
 ```
 
 ## What's Next
-1. **Add real content** - Use admin panel to add projects, experience, skills
-2. **Code splitting** - Reduce bundle size (currently 807KB)
-3. **SEO** - Add meta tags to index.html
-4. **Image uploads** - Add file upload for project images (currently URL-based)
+1. **Blog enhancements** - Consider adding categories, search, RSS feed
+2. **Code splitting** - Reduce bundle size
+3. **SEO** - Add meta tags to index.html and blog posts
+4. **Image uploads** - Add file upload for project/blog images (currently URL-based)
 
 ## Don't Break
 - `docker-compose.yml` with named volume `portfolio_data` for SQLite persistence
 - Coolify volume mount: `portfolio-data` → `/app/data`
+- Coolify domains: both `cavazosgeorge.com` and `blog.cavazosgeorge.com` configured
 - Environment variables: `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `DB_PATH`
 - Use `??` (nullish coalescing) not `||` for sort_order (0 is valid)
 - Technologies input uses separate string state, parsed only on save
@@ -294,9 +334,11 @@ server/
 - **Light Mode**: Blocking script in `index.html` must run before React to prevent flash
 - **Light Mode**: `[data-theme]` attribute on `<html>` controls theme (not class)
 - **Light Mode**: Header's `useTransform` needs color arrays per theme (can't use CSS vars)
+- **Blog Subdomain**: `isBlogSubdomain()` in App.tsx checks `hostname.startsWith("blog.")`
+- **Blog Routing**: Blog routes only render when on blog subdomain, portfolio routes on main domain
 
 ## Blockers
 - None
 
 ---
-*Last updated: 2025-12-12*
+*Last updated: 2025-12-26*

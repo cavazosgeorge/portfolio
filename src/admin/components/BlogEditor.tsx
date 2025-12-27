@@ -305,6 +305,7 @@ export function BlogEditor() {
                   bg="var(--void)"
                   border="1px solid rgba(255,255,255,0.1)"
                   color="var(--text-primary)"
+                  _placeholder={{ color: "var(--text-secondary)" }}
                 />
               </Box>
               <Box flex={2}>
@@ -318,6 +319,7 @@ export function BlogEditor() {
                   bg="var(--void)"
                   border="1px solid rgba(255,255,255,0.1)"
                   color="var(--text-primary)"
+                  _placeholder={{ color: "var(--text-secondary)" }}
                 />
               </Box>
             </Flex>
@@ -333,6 +335,7 @@ export function BlogEditor() {
                 bg="var(--void)"
                 border="1px solid rgba(255,255,255,0.1)"
                 color="var(--text-primary)"
+                _placeholder={{ color: "var(--text-secondary)" }}
                 rows={2}
               />
             </Box>
@@ -359,6 +362,7 @@ const code = 'syntax highlighted';
                 bg="var(--void)"
                 border="1px solid rgba(255,255,255,0.1)"
                 color="var(--text-primary)"
+                _placeholder={{ color: "var(--text-secondary)" }}
                 fontFamily="var(--font-mono)"
                 fontSize="sm"
                 rows={15}
@@ -382,6 +386,7 @@ const code = 'syntax highlighted';
                   bg="var(--void)"
                   border="1px solid rgba(255,255,255,0.1)"
                   color="var(--text-primary)"
+                  _placeholder={{ color: "var(--text-secondary)" }}
                 />
               </Box>
               <Flex align="center" gap={4} mt={6}>
