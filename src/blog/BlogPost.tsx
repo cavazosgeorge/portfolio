@@ -23,21 +23,34 @@ function formatDate(dateStr: string) {
   });
 }
 
-function withoutDuplicateLeadingTitle(content: string, title: string) {
+function normalizeIntroText(value: string) {
+  return value.trim().replace(/\s+/g, " ").replace(/[.!?]+$/, "").toLocaleLowerCase();
+}
+
+function withoutDuplicateIntro(content: string, title: string, excerpt: string) {
   const lines = content.split("\n");
-  const firstContentLine = lines.findIndex((line) => line.trim().length > 0);
+  let firstContentLine = lines.findIndex((line) => line.trim().length > 0);
 
   if (firstContentLine === -1) return content;
 
   const headingMatch = lines[firstContentLine].trim().match(/^#\s+(.+?)\s*#*$/);
-  const normalizedHeading = headingMatch?.[1].trim().replace(/\s+/g, " ").toLocaleLowerCase();
-  const normalizedTitle = title.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+  const headingMatchesTitle = headingMatch && normalizeIntroText(headingMatch[1]) === normalizeIntroText(title);
 
-  if (!normalizedHeading || normalizedHeading !== normalizedTitle) return content;
+  if (headingMatchesTitle) {
+    lines.splice(firstContentLine, 1);
+  } else if (headingMatch) {
+    firstContentLine += 1;
+  }
 
-  lines.splice(firstContentLine, 1);
   while (lines[firstContentLine]?.trim() === "") {
     lines.splice(firstContentLine, 1);
+  }
+
+  if (excerpt && normalizeIntroText(lines[firstContentLine] || "") === normalizeIntroText(excerpt)) {
+    lines.splice(firstContentLine, 1);
+    while (lines[firstContentLine]?.trim() === "") {
+      lines.splice(firstContentLine, 1);
+    }
   }
 
   return lines.join("\n");
@@ -217,7 +230,7 @@ export function BlogPost() {
               borderColor="var(--border-subtle)"
               pt={{ base: 8, md: 10 }}
             >
-              <MarkdownRenderer content={withoutDuplicateLeadingTitle(post.content, post.title)} />
+              <MarkdownRenderer content={withoutDuplicateIntro(post.content, post.title, post.excerpt)} />
             </Box>
 
             <Flex
