@@ -194,6 +194,12 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
+        components={{
+          h1: ({ node, ...props }) => {
+            void node;
+            return <h2 {...props} />;
+          },
+        }}
       >
         {content}
       </ReactMarkdown>
