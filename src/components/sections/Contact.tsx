@@ -1,35 +1,28 @@
-import { Box, Container, Text, VStack, Input, Textarea, Flex, Link } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { Box, Button, Container, Flex, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { MagneticElement } from "../animations/MagneticElement";
 import { useSetting } from "../../hooks/useContent";
+
+const DEFAULT_CONTACT = {
+  heading: "Get in touch",
+  email: "",
+  github: "https://github.com/cavazosgeorge",
+  linkedin: "",
+};
 
 const inputStyles = {
   bg: "var(--bg-secondary)",
-  border: "1px solid",
-  borderColor: "var(--overlay-medium)",
-  borderRadius: "lg",
+  border: "1px solid var(--border-subtle)",
+  borderRadius: "10px",
   color: "var(--text-primary)",
   fontFamily: "var(--font-body)",
   fontSize: "md",
   px: 4,
   py: 3,
-  _placeholder: { color: "var(--text-secondary)" },
-  _hover: { borderColor: "var(--glow-cyan-dim)" },
-  _focus: {
-    borderColor: "var(--glow-cyan)",
-    boxShadow: "0 0 0 1px var(--glow-cyan)",
-    outline: "none",
-  },
-  transition: "all 0.3s ease",
-};
-
-const DEFAULT_CONTACT = {
-  heading: "Get in Touch",
-  email: "your@email.com",
-  github: "https://github.com/yourusername",
-  linkedin: "https://linkedin.com/in/yourusername",
+  _placeholder: { color: "var(--text-tertiary)" },
+  _hover: { borderColor: "var(--border-strong)" },
+  _focus: { borderColor: "var(--accent-primary)", boxShadow: "none", outline: "none" },
+  _focusVisible: { borderColor: "var(--accent-primary)", boxShadow: "0 0 0 3px var(--accent-soft)", outline: "none" },
+  transition: "border-color 160ms ease, box-shadow 160ms ease",
 };
 
 export function Contact() {
@@ -38,267 +31,191 @@ export function Contact() {
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const { data: contactData } = useSetting("contact");
-
   const contact = contactData || DEFAULT_CONTACT;
 
   const socialLinks = [
     { name: "GitHub", href: contact.github },
     { name: "LinkedIn", href: contact.linkedin },
-    { name: "Email", href: `mailto:${contact.email}` },
-  ].filter((link) => link.href && link.href !== "mailto:");
+    { name: "Email", href: contact.email ? `mailto:${contact.email}` : "" },
+  ].filter((link) => Boolean(link.href));
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to send message");
-      }
+      if (!response.ok) throw new Error("Failed to send message");
 
       setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong. Please try again or use one of the links below.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Box
-      as="section"
-      id="contact"
-      py="var(--section-padding)"
-      position="relative"
-      overflow="hidden"
-    >
-      {/* Background glow */}
-      <Box
-        position="absolute"
-        bottom="0"
-        left="50%"
-        transform="translateX(-50%)"
-        width="600px"
-        height="600px"
-        background="radial-gradient(circle, var(--warm-coral) 0%, transparent 70%)"
-        opacity={0.1}
-        pointerEvents="none"
-      />
+    <Box as="section" id="contact" pt="var(--section-padding)" pb={{ base: 8, md: 10 }}>
+      <Container maxW="container.lg">
+        <Box
+          display="grid"
+          gridTemplateColumns={{ base: "1fr", lg: "minmax(0, 0.8fr) minmax(420px, 1.2fr)" }}
+          gap={{ base: 12, lg: 20 }}
+          alignItems="start"
+        >
+          <Box>
+            <Text className="section-kicker">{contact.heading}</Text>
+            <Text as="h2" className="section-title">
+              Let’s build something useful.
+            </Text>
+            <Text mt={5} maxW="520px" color="var(--text-secondary)" fontSize={{ base: "md", md: "lg" }} lineHeight="1.75">
+              Have a project, technical challenge, or idea worth exploring? Send a note and tell me what you are working on.
+            </Text>
 
-      <Container maxW="container.md" position="relative">
-        <VStack gap={12} align="stretch">
-          {/* Section header */}
-          <RevealOnScroll>
-            <Box textAlign="center">
-              <Text
-                fontSize="sm"
-                fontFamily="var(--font-mono)"
-                color="var(--glow-cyan)"
-                letterSpacing="0.2em"
-                textTransform="uppercase"
-                mb={2}
-              >
-                Contact
-              </Text>
-              <Text
-                fontSize={{ base: "3xl", md: "4xl" }}
-                fontFamily="var(--font-display)"
-                fontWeight="600"
-                lineHeight="1.2"
-                mb={4}
-              >
-                Let's{" "}
-                <Text as="span" color="var(--warm-coral)">
-                  connect
-                </Text>
-              </Text>
-              <Text
-                fontSize="lg"
-                color="var(--text-secondary)"
-                maxW="500px"
-                mx="auto"
-              >
-                Have a project in mind or just want to chat? I'd love to hear
-                from you.
-              </Text>
-            </Box>
-          </RevealOnScroll>
-
-          {/* Contact form or success message */}
-          {submitted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: "spring", stiffness: 100 }}
-            >
-              <Box
-                textAlign="center"
-                p={8}
-                bg="var(--bg-secondary)"
-                borderRadius="xl"
-                border="1px solid var(--glow-cyan)"
-              >
-                <Text
-                  fontSize="2xl"
-                  fontFamily="var(--font-display)"
-                  color="var(--glow-cyan)"
-                  mb={2}
-                >
-                  Message sent!
-                </Text>
-                <Text color="var(--text-secondary)">
-                  Thanks for reaching out. I'll get back to you soon.
-                </Text>
-              </Box>
-            </motion.div>
-          ) : (
-            <RevealOnScroll delay={0.2}>
-              <form onSubmit={handleSubmit}>
-                <Box
-                  bg="var(--bg-secondary)"
-                  p={{ base: 6, md: 8 }}
-                  borderRadius="xl"
-                  border="1px solid"
-                  borderColor="var(--overlay-subtle)"
-                >
-                  <VStack gap={5}>
-                    <Flex
-                      direction={{ base: "column", md: "row" }}
-                      gap={5}
-                      w="100%"
-                    >
-                      <Box flex={1}>
-                        <Text
-                          fontSize="sm"
-                          fontFamily="var(--font-mono)"
-                          color="var(--text-secondary)"
-                          mb={2}
-                        >
-                          NAME
-                        </Text>
-                        <Input
-                          placeholder="Your name"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          {...inputStyles}
-                        />
-                      </Box>
-                      <Box flex={1}>
-                        <Text
-                          fontSize="sm"
-                          fontFamily="var(--font-mono)"
-                          color="var(--text-secondary)"
-                          mb={2}
-                        >
-                          EMAIL
-                        </Text>
-                        <Input
-                          type="email"
-                          placeholder="your@email.com"
-                          required
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          {...inputStyles}
-                        />
-                      </Box>
-                    </Flex>
-
-                    <Box w="100%">
-                      <Text
-                        fontSize="sm"
-                        fontFamily="var(--font-mono)"
-                        color="var(--text-secondary)"
-                        mb={2}
-                      >
-                        MESSAGE
-                      </Text>
-                      <Textarea
-                        placeholder="What's on your mind?"
-                        rows={5}
-                        required
-                        resize="none"
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        {...inputStyles}
-                      />
-                    </Box>
-
-                    {error && (
-                      <Text color="var(--warm-coral)" fontSize="sm">
-                        {error}
-                      </Text>
-                    )}
-
-                    <MagneticElement strength={0.2} radius={100}>
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        style={{
-                          width: "100%",
-                          padding: "12px 32px",
-                          background: "var(--glow-cyan)",
-                          color: "var(--text-on-accent)",
-                          fontFamily: "var(--font-display)",
-                          fontWeight: 600,
-                          fontSize: "1rem",
-                          borderRadius: "8px",
-                          border: "none",
-                          cursor: isSubmitting ? "not-allowed" : "pointer",
-                          opacity: isSubmitting ? 0.7 : 1,
-                          transition: "all 0.3s ease",
-                        }}
-                      >
-                        {isSubmitting ? "Sending..." : "Send Message"}
-                      </button>
-                    </MagneticElement>
-                  </VStack>
-                </Box>
-              </form>
-            </RevealOnScroll>
-          )}
-
-          {/* Social links */}
-          <RevealOnScroll delay={0.3}>
-            <Flex justify="center" gap={6}>
-              {socialLinks.map((link) => (
-                <MagneticElement key={link.name} strength={0.3} radius={80}>
+            {socialLinks.length > 0 && (
+              <Flex mt={8} gap={6} flexWrap="wrap">
+                {socialLinks.map((link) => (
                   <Link
+                    key={link.name}
                     href={link.href}
                     target={link.href.startsWith("http") ? "_blank" : undefined}
                     rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    color="var(--text-secondary)"
+                    color="var(--accent-primary)"
                     fontFamily="var(--font-mono)"
                     fontSize="sm"
-                    transition="color 0.3s ease"
-                    _hover={{ color: "var(--glow-cyan)", textDecoration: "none" }}
+                    fontWeight="600"
+                    textDecoration="none"
+                    _hover={{ textDecoration: "underline" }}
                   >
-                    {link.name}
+                    {link.name} ↗
                   </Link>
-                </MagneticElement>
-              ))}
-            </Flex>
-          </RevealOnScroll>
-        </VStack>
-      </Container>
+                ))}
+              </Flex>
+            )}
+          </Box>
 
-      {/* Footer */}
-      <Box mt={20} textAlign="center">
-        <Text
-          fontSize="sm"
-          color="var(--text-secondary)"
+          {submitted ? (
+            <Box
+              role="status"
+              border="1px solid var(--accent-primary)"
+              borderRadius="12px"
+              bg="var(--accent-soft)"
+              p={{ base: 7, md: 9 }}
+            >
+              <Text as="h3" fontFamily="var(--font-display)" fontSize="2xl" fontWeight="600">
+                Message sent.
+              </Text>
+              <Text mt={2} color="var(--text-secondary)">
+                Thanks for reaching out. I’ll get back to you soon.
+              </Text>
+            </Box>
+          ) : (
+            <Box
+              as="form"
+              onSubmit={handleSubmit}
+              bg="var(--surface-primary)"
+              border="1px solid var(--border-subtle)"
+              borderRadius="12px"
+              p={{ base: 6, md: 8 }}
+            >
+              <VStack gap={5} align="stretch">
+                <Flex direction={{ base: "column", md: "row" }} gap={5}>
+                  <Box flex={1}>
+                    <label className="form-label" htmlFor="contact-name">Name</label>
+                    <Input
+                      id="contact-name"
+                      name="name"
+                      autoComplete="name"
+                      placeholder="Your name"
+                      required
+                      value={formData.name}
+                      onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
+                      {...inputStyles}
+                    />
+                  </Box>
+                  <Box flex={1}>
+                    <label className="form-label" htmlFor="contact-email">Email</label>
+                    <Input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      required
+                      value={formData.email}
+                      onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
+                      {...inputStyles}
+                    />
+                  </Box>
+                </Flex>
+
+                <Box>
+                  <label className="form-label" htmlFor="contact-message">Message</label>
+                  <Textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="What are you building?"
+                    rows={6}
+                    required
+                    resize="vertical"
+                    value={formData.message}
+                    onChange={(event) => setFormData((current) => ({ ...current, message: event.target.value }))}
+                    {...inputStyles}
+                  />
+                </Box>
+
+                {error && (
+                  <Text role="alert" color="var(--danger-text)" fontSize="sm">
+                    {error}
+                  </Text>
+                )}
+
+                <Button
+                  type="submit"
+                  alignSelf="flex-start"
+                  bg="var(--accent-primary)"
+                  color="var(--accent-contrast)"
+                  borderRadius="8px"
+                  px={6}
+                  py={5}
+                  fontWeight="700"
+                  disabled={isSubmitting}
+                  _hover={{ bg: "var(--accent-hover)" }}
+                  _focus={{ boxShadow: "none" }}
+                  _focusVisible={{ outline: "3px solid var(--accent-soft)", outlineOffset: "3px", boxShadow: "none" }}
+                  transition="background-color 160ms ease"
+                >
+                  {isSubmitting ? "Sending…" : "Send message"}
+                </Button>
+              </VStack>
+            </Box>
+          )}
+        </Box>
+
+        <Flex
+          mt={{ base: 16, md: 24 }}
+          pt={6}
+          borderTop="1px solid var(--border-subtle)"
+          justify="space-between"
+          align={{ base: "flex-start", md: "center" }}
+          direction={{ base: "column", md: "row" }}
+          gap={3}
+          color="var(--text-tertiary)"
           fontFamily="var(--font-mono)"
+          fontSize="xs"
         >
-          Built with React, Framer Motion & Chakra UI
-        </Text>
-      </Box>
+          <Text>© {new Date().getFullYear()} George Cavazos</Text>
+          <Text>Designed for clarity. Built for the long run.</Text>
+        </Flex>
+      </Container>
     </Box>
   );
 }

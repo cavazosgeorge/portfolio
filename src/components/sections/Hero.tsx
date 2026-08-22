@@ -1,104 +1,135 @@
-import { Box, Container, Text, VStack } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { SplitText } from "../animations/SplitText";
+import { Box, Container, Flex, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+
+const proofPoints = [
+  { label: "Current role", value: "Senior Engineer at Pfizer" },
+  { label: "Core focus", value: "Industrial automation + IT/OT" },
+  { label: "Built end to end", value: "AI, data + full-stack products" },
+] as const;
 
 export function Hero() {
   return (
     <Box
       as="section"
+      id="top"
       position="relative"
-      minH="100vh"
+      minH={{ base: "auto", lg: "calc(82vh - 68px)" }}
       display="flex"
       alignItems="center"
-      justifyContent="center"
+      py={{ base: 20, md: 24, lg: 28 }}
     >
-      <Container maxW="container.xl" position="relative">
-        <VStack gap={6} align="center" textAlign="center">
-          <Box>
+      <Container maxW="container.xl">
+        <VStack align="stretch" gap={{ base: 12, md: 16 }}>
+          <Box maxW="980px">
             <Text
-              fontSize="sm"
+              fontSize={{ base: "xs", md: "sm" }}
               fontFamily="var(--font-mono)"
-              color="var(--glow-cyan)"
-              letterSpacing="0.2em"
+              fontWeight="500"
+              color="var(--accent-primary)"
+              letterSpacing="0.12em"
               textTransform="uppercase"
-              mb={4}
+              mb={{ base: 5, md: 7 }}
             >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-              >
-                Software Developer
-              </motion.span>
+              Senior Automation IT/OT Engineer
             </Text>
 
-            <Box
-              fontSize={{ base: "4xl", md: "6xl", lg: "8xl" }}
-              fontFamily="var(--font-display)"
-              fontWeight="700"
-              lineHeight="1.1"
-            >
-              <SplitText magnetic delay={0.8}>
-                George Cavazos
-              </SplitText>
-            </Box>
-          </Box>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-          >
             <Text
+              as="h1"
+              fontSize={{ base: "4xl", sm: "5xl", md: "6xl", lg: "7xl" }}
+              fontFamily="var(--font-display)"
+              fontWeight="600"
+              color="var(--text-primary)"
+              letterSpacing="-0.055em"
+              lineHeight={{ base: "1.02", md: "0.98" }}
+              textWrap="balance"
+            >
+              Building reliable systems where industrial automation, data, and AI meet.
+            </Text>
+
+            <Text
+              mt={{ base: 6, md: 8 }}
+              maxW="720px"
               fontSize={{ base: "lg", md: "xl" }}
               color="var(--text-secondary)"
-              maxW="600px"
-              fontFamily="var(--font-body)"
+              lineHeight="1.7"
             >
-              Building digital experiences that blend creativity with clean code.
-              Crafting interfaces that feel alive.
+              I turn complex operational problems into dependable platforms, useful data, and thoughtful software people can trust.
             </Text>
-          </motion.div>
 
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5, duration: 1 }}
-            style={{ marginTop: "4rem" }}
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Box
-                width="30px"
-                height="50px"
-                border="2px solid"
-                borderColor="var(--text-secondary)"
-                borderRadius="full"
-                position="relative"
-                opacity={0.5}
-                _hover={{ opacity: 1, borderColor: "var(--glow-cyan)" }}
-                transition="all 0.3s ease"
+            <Flex mt={{ base: 8, md: 10 }} gap={3} align="center" flexWrap="wrap">
+              <Link
+                href="#projects"
+                display="inline-flex"
+                alignItems="center"
+                justifyContent="center"
+                minH="48px"
+                px={6}
+                bg="var(--accent-primary)"
+                color="var(--accent-contrast)"
+                border="1px solid"
+                borderColor="var(--accent-primary)"
+                borderRadius="md"
+                fontSize="sm"
+                fontWeight="600"
+                textDecoration="none"
+                transition="transform 160ms ease, opacity 160ms ease"
+                _hover={{ textDecoration: "none", transform: "translateY(-1px)", opacity: 0.9 }}
               >
-                <motion.div
-                  animate={{ y: [0, 16, 0], opacity: [1, 0.3, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  style={{
-                    position: "absolute",
-                    top: "8px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: "6px",
-                    height: "6px",
-                    borderRadius: "50%",
-                    background: "var(--glow-cyan)",
-                  }}
-                />
+                View selected work
+              </Link>
+              <Link
+                href="#writing"
+                display="inline-flex"
+                alignItems="center"
+                justifyContent="center"
+                minH="48px"
+                px={6}
+                color="var(--text-primary)"
+                border="1px solid"
+                borderColor="var(--border-subtle)"
+                borderRadius="md"
+                fontSize="sm"
+                fontWeight="600"
+                textDecoration="none"
+                transition="border-color 160ms ease, color 160ms ease"
+                _hover={{ textDecoration: "none", borderColor: "var(--accent-primary)", color: "var(--accent-primary)" }}
+              >
+                Read selected writing
+              </Link>
+            </Flex>
+          </Box>
+
+          <SimpleGrid
+            columns={{ base: 1, md: 3 }}
+            borderTop="1px solid"
+            borderBottom="1px solid"
+            borderColor="var(--border-subtle)"
+          >
+            {proofPoints.map((point, index) => (
+              <Box
+                key={point.label}
+                py={{ base: 5, md: 6 }}
+                px={{ base: 0, md: index === 0 ? 0 : 7 }}
+                borderTop={{ base: index === 0 ? "none" : "1px solid", md: "none" }}
+                borderLeft={{ base: "none", md: index === 0 ? "none" : "1px solid" }}
+                borderColor="var(--border-subtle)"
+              >
+                <Text
+                  fontFamily="var(--font-mono)"
+                  fontSize="10px"
+                  fontWeight="500"
+                  color="var(--text-secondary)"
+                  letterSpacing="0.1em"
+                  textTransform="uppercase"
+                  mb={1.5}
+                >
+                  {point.label}
+                </Text>
+                <Text fontSize={{ base: "md", md: "sm", lg: "md" }} color="var(--text-primary)" fontWeight="500">
+                  {point.value}
+                </Text>
               </Box>
-            </motion.div>
-          </motion.div>
+            ))}
+          </SimpleGrid>
         </VStack>
       </Container>
     </Box>

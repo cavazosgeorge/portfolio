@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono, type MiddlewareHandler } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { serveStatic } from "hono/bun";
@@ -63,6 +63,21 @@ app.get("/api/auth/me", requireAuth, (c) => {
   const user = c.get("user");
   return c.json({ user });
 });
+
+// Public API routes are intentionally read-only. The route modules also power
+// legacy local tooling, so enforce the boundary before they are mounted here.
+const requireReadOnly: MiddlewareHandler = async (c, next) => {
+  if (!["GET", "HEAD", "OPTIONS"].includes(c.req.method)) {
+    return c.json({ error: "Method not allowed" }, 405);
+  }
+
+  await next();
+};
+
+for (const prefix of ["projects", "experience", "skills", "settings"]) {
+  app.use(`/api/${prefix}`, requireReadOnly);
+  app.use(`/api/${prefix}/*`, requireReadOnly);
+}
 
 // Public API routes (read-only)
 app.route("/api/projects", projects);

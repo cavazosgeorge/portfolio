@@ -1,68 +1,56 @@
-import { Box, Container, Flex, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { RevealOnScroll } from "../animations/RevealOnScroll";
-import { useSkills, useSetting, type Skill } from "../../hooks/useContent";
-
-const CATEGORIES = [
-  { value: "frontend", label: "Frontend" },
-  { value: "backend", label: "Backend" },
-  { value: "devops", label: "DevOps" },
-  { value: "ai", label: "AI" },
-];
-
-const SkillTag = ({ name, index }: { name: string; index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.05, type: "spring", stiffness: 100 }}
-  >
-    <Box
-      px={4}
-      py={2}
-      bg="var(--bg-secondary)"
-      border="1px solid"
-      borderColor="var(--glow-cyan-dim)"
-      borderRadius="full"
-      fontSize="sm"
-      fontFamily="var(--font-mono)"
-      color="var(--text-primary)"
-      transition="all 0.3s ease"
-      _hover={{
-        borderColor: "var(--glow-cyan)",
-        boxShadow: "0 0 20px var(--glow-cyan-dim)",
-        transform: "translateY(-2px)",
-      }}
-    >
-      {name}
-    </Box>
-  </motion.div>
-);
+import { Box, Container, Flex, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { useSetting, useSkills } from "../../hooks/useContent";
 
 const DEFAULT_ABOUT = {
-  heading: "Building at the intersection of",
-  subheading: "creativity and code",
+  heading: "Engineering with range,",
+  subheading: "grounded in reliability.",
   paragraphs: [
-    "I'm a software developer who believes that great code should feel as good as it works. I specialize in building web applications that are both technically robust and genuinely delightful to use.",
-    "When I'm not coding, you'll find me exploring new technologies, contributing to open source, or experimenting with creative coding projects that push the boundaries of what's possible in the browser.",
+    "I’m a senior software engineer who loves diving into tough problems—the ones that force you to rethink everything and come out better on the other side. I build large-scale web apps end-to-end, from backend architecture and automation systems to data-heavy AI tools, always trying to make things solid and actually useful.",
+    "When I’m not coding, I’m usually chasing the same kind of progress elsewhere: training toward Men’s Physique, climbing routes that push my limits, or picking up whatever new skill catches my interest.",
   ],
 };
+
+const capabilities = [
+  {
+    category: "devops",
+    number: "01",
+    title: "Industrial systems & delivery",
+    description: "Operational infrastructure, automation platforms, and dependable paths to production.",
+    fallback: "Automation · Linux/RHEL · CI/CD · Containers",
+  },
+  {
+    category: "ai",
+    number: "02",
+    title: "AI & data systems",
+    description: "Useful intelligence grounded in clear data flows, observable behavior, and real constraints.",
+    fallback: "RAG · LLM systems · Data visualization · SQL",
+  },
+  {
+    category: "backend",
+    number: "03",
+    title: "Application architecture",
+    description: "APIs, services, and data models designed to remain understandable as products grow.",
+    fallback: "APIs · Node.js · Python · PostgreSQL",
+  },
+  {
+    category: "frontend",
+    number: "04",
+    title: "Product engineering",
+    description: "Focused interfaces that make complex systems legible, efficient, and pleasant to use.",
+    fallback: "React · TypeScript · Design systems · Visualization",
+  },
+] as const;
 
 export function About() {
   const { data: skills } = useSkills();
   const { data: about } = useSetting("about");
-
   const content = about || DEFAULT_ABOUT;
-
-  // Group skills by category
-  const groupedSkills = skills.reduce(
-    (acc, skill) => {
-      if (!acc[skill.category]) acc[skill.category] = [];
-      acc[skill.category].push(skill);
-      return acc;
-    },
-    {} as Record<string, Skill[]>
-  );
+  const paragraphs = content.paragraphs.filter((paragraph) => paragraph.trim().length > 0);
+  const professionalParagraph = paragraphs[0] || DEFAULT_ABOUT.paragraphs[0];
+  const personalParagraph =
+    paragraphs.find((paragraph, index) => index > 0 && /climb|gym|physique|outside|not coding/i.test(paragraph)) ||
+    paragraphs[1] ||
+    DEFAULT_ABOUT.paragraphs[1];
 
   return (
     <Box
@@ -70,127 +58,124 @@ export function About() {
       id="about"
       py="var(--section-padding)"
       position="relative"
-      overflow="hidden"
+      borderTop="1px solid"
+      borderColor="var(--border-subtle)"
     >
-      {/* Subtle gradient background */}
-      <Box
-        position="absolute"
-        top="50%"
-        left="50%"
-        transform="translate(-50%, -50%)"
-        width="800px"
-        height="800px"
-        background="radial-gradient(circle, var(--glow-cyan-dim) 0%, transparent 70%)"
-        opacity={0.3}
-        pointerEvents="none"
-      />
-
-      <Container maxW="container.lg" position="relative">
-        <VStack gap={12} align="stretch">
-          {/* Section header */}
-          <RevealOnScroll>
-            <Box textAlign="center">
-              <Text
-                fontSize="sm"
-                fontFamily="var(--font-mono)"
-                color="var(--glow-cyan)"
-                letterSpacing="0.2em"
-                textTransform="uppercase"
-                mb={2}
-              >
-                About
+      <Container maxW="container.xl">
+        <Flex direction={{ base: "column", lg: "row" }} gap={{ base: 10, lg: 20 }} align="flex-start">
+          <Box flex="0 0 38%" position={{ base: "static", lg: "sticky" }} top={{ lg: "108px" }}>
+            <Text
+              fontSize="xs"
+              fontFamily="var(--font-mono)"
+              fontWeight="500"
+              color="var(--accent-primary)"
+              letterSpacing="0.12em"
+              textTransform="uppercase"
+              mb={5}
+            >
+              About / Approach
+            </Text>
+            <Text
+              as="h2"
+              fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+              fontFamily="var(--font-display)"
+              fontWeight="600"
+              color="var(--text-primary)"
+              letterSpacing="-0.045em"
+              lineHeight="1.08"
+              textWrap="balance"
+            >
+              {content.heading}{" "}
+              <Text as="span" color="var(--accent-primary)">
+                {content.subheading}
               </Text>
-              <Text
-                fontSize={{ base: "3xl", md: "4xl" }}
-                fontFamily="var(--font-display)"
-                fontWeight="600"
-                lineHeight="1.2"
-              >
-                {content.heading}
-                <br />
-                <Text as="span" color="var(--glow-cyan)">
-                  {content.subheading.split(" and ")[0] || "creativity"}
-                </Text>{" "}
-                and{" "}
-                <Text as="span" color="var(--warm-coral)">
-                  {content.subheading.split(" and ")[1] || "code"}
-                </Text>
-              </Text>
-            </Box>
-          </RevealOnScroll>
+            </Text>
+          </Box>
 
-          {/* Bio content */}
-          <Flex
-            direction={{ base: "column", md: "row" }}
-            gap={12}
-            align="flex-start"
-          >
-            <Box flex={1}>
-              <RevealOnScroll delay={0.1}>
-                <VStack gap={6} align="stretch">
-                  {content.paragraphs.map((paragraph, index) => (
-                    <Text
-                      key={index}
-                      fontSize="lg"
-                      color="var(--text-secondary)"
-                      lineHeight="1.8"
-                    >
-                      {paragraph}
-                    </Text>
-                  ))}
-                </VStack>
-              </RevealOnScroll>
-            </Box>
-
-            {/* Skills */}
-            <Box flex={1}>
-              <RevealOnScroll delay={0.2}>
+          <VStack flex="1" align="stretch" gap={{ base: 10, md: 12 }}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 7, md: 10 }}>
+              <Box>
                 <Text
-                  fontSize="sm"
                   fontFamily="var(--font-mono)"
+                  fontSize="10px"
+                  fontWeight="500"
                   color="var(--text-secondary)"
-                  mb={6}
                   letterSpacing="0.1em"
+                  textTransform="uppercase"
+                  mb={3}
                 >
-                  TECHNOLOGIES I WORK WITH
+                  Professional
                 </Text>
-                <VStack align="stretch" gap={6}>
-                  {(() => {
-                    let globalIndex = 0;
-                    return CATEGORIES.map((category) => {
-                      const categorySkills = groupedSkills[category.value] || [];
-                      if (categorySkills.length === 0) return null;
+                <Text fontSize={{ base: "md", md: "lg" }} color="var(--text-secondary)" lineHeight="1.75">
+                  {professionalParagraph}
+                </Text>
+              </Box>
+              <Box>
+                <Text
+                  fontFamily="var(--font-mono)"
+                  fontSize="10px"
+                  fontWeight="500"
+                  color="var(--text-secondary)"
+                  letterSpacing="0.1em"
+                  textTransform="uppercase"
+                  mb={3}
+                >
+                  Beyond work
+                </Text>
+                <Text fontSize={{ base: "md", md: "lg" }} color="var(--text-secondary)" lineHeight="1.75">
+                  {personalParagraph}
+                </Text>
+              </Box>
+            </SimpleGrid>
 
-                      return (
-                        <Box key={category.value}>
-                          <Text
-                            fontSize="xs"
-                            fontFamily="var(--font-mono)"
-                            color="var(--glow-cyan)"
-                            mb={3}
-                            letterSpacing="0.1em"
-                          >
-                            {category.label.toUpperCase()}
-                          </Text>
-                          <Wrap gap={3}>
-                            {categorySkills.map((skill) => {
-                              const currentIndex = globalIndex++;
-                              return (
-                                <WrapItem key={skill.name}>
-                                  <SkillTag name={skill.name} index={currentIndex} />
-                                </WrapItem>
-                              );
-                            })}
-                          </Wrap>
-                        </Box>
-                      );
-                    });
-                  })()}
-                </VStack>
-              </RevealOnScroll>
+            <Box>
+              <Text
+                fontFamily="var(--font-mono)"
+                fontSize="10px"
+                fontWeight="500"
+                color="var(--text-secondary)"
+                letterSpacing="0.1em"
+                textTransform="uppercase"
+                mb={4}
+              >
+                Capabilities
+              </Text>
+              <SimpleGrid columns={{ base: 1, md: 2 }} gapX={10}>
+                {capabilities.map((capability) => {
+                  const matchingSkills = skills
+                    .filter((skill) => skill.category === capability.category)
+                    .slice(0, 5)
+                    .map((skill) => skill.name)
+                    .join(" · ");
+
+                  return (
+                    <Box
+                      key={capability.category}
+                      py={6}
+                      borderTop="1px solid"
+                      borderColor="var(--border-subtle)"
+                    >
+                      <Flex align="baseline" gap={3} mb={2}>
+                        <Text fontFamily="var(--font-mono)" fontSize="10px" color="var(--accent-primary)">
+                          {capability.number}
+                        </Text>
+                        <Text fontFamily="var(--font-display)" fontSize="lg" fontWeight="600" color="var(--text-primary)">
+                          {capability.title}
+                        </Text>
+                      </Flex>
+                      <Text fontSize="sm" color="var(--text-secondary)" lineHeight="1.65" mb={3}>
+                        {capability.description}
+                      </Text>
+                      <Text fontFamily="var(--font-mono)" fontSize="xs" color="var(--text-primary)" lineHeight="1.7">
+                        {matchingSkills || capability.fallback}
+                      </Text>
+                    </Box>
+                  );
+                })}
+              </SimpleGrid>
             </Box>
-          </Flex>
-        </VStack>
+          </VStack>
+        </Flex>
       </Container>
     </Box>
   );

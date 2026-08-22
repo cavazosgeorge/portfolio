@@ -65,6 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Fast refresh warning is intentionally scoped to this colocated context hook.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

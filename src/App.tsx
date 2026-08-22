@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Hero } from "./components/sections/Hero";
@@ -6,14 +7,15 @@ import { About } from "./components/sections/About";
 import { Projects } from "./components/sections/Projects";
 import { Experience } from "./components/sections/Experience";
 import { Contact } from "./components/sections/Contact";
-import { ParallaxBlobs } from "./components/animations/ParallaxBlobs";
+import { Writing } from "./components/sections/Writing";
 import { AuthProvider, useAuth } from "./admin/AuthContext";
 import { ColorModeProvider } from "./hooks/useColorMode";
-import { Login } from "./admin/Login";
-import { Dashboard } from "./admin/Dashboard";
-import { BlogLayout } from "./blog/BlogLayout";
-import { BlogHome } from "./blog/BlogHome";
-import { BlogPost } from "./blog/BlogPost";
+
+const Login = lazy(() => import("./admin/Login").then((module) => ({ default: module.Login })));
+const Dashboard = lazy(() => import("./admin/Dashboard").then((module) => ({ default: module.Dashboard })));
+const BlogLayout = lazy(() => import("./blog/BlogLayout").then((module) => ({ default: module.BlogLayout })));
+const BlogHome = lazy(() => import("./blog/BlogHome").then((module) => ({ default: module.BlogHome })));
+const BlogPost = lazy(() => import("./blog/BlogPost").then((module) => ({ default: module.BlogPost })));
 
 function isBlogSubdomain(): boolean {
   const hostname = window.location.hostname;
@@ -23,15 +25,16 @@ function isBlogSubdomain(): boolean {
 function Portfolio() {
   return (
     <Box minH="100vh" bg="var(--bg-primary)" position="relative">
-      {/* Parallax blob background */}
-      <ParallaxBlobs />
-
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <Header />
-      <Box as="main" position="relative" zIndex={1}>
+      <Box as="main" id="main-content" position="relative" zIndex={1}>
         <Hero />
-        <About />
         <Projects />
         <Experience />
+        <Writing />
+        <About />
         <Contact />
       </Box>
     </Box>
@@ -63,31 +66,33 @@ function App() {
     <BrowserRouter>
       <ColorModeProvider>
         <AuthProvider>
-          <Routes>
-            {isBlog ? (
-              // Blog subdomain routes
-              <>
-                <Route path="/" element={<BlogLayout />}>
-                  <Route index element={<BlogHome />} />
-                  <Route path=":slug" element={<BlogPost />} />
-                </Route>
-              </>
-            ) : (
-              // Main portfolio routes
-              <>
-                <Route path="/" element={<Portfolio />} />
-                <Route path="/admin/login" element={<Login />} />
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-              </>
-            )}
-          </Routes>
+          <Suspense fallback={<Box minH="100vh" bg="var(--bg-primary)" />}>
+            <Routes>
+              {isBlog ? (
+                // Blog subdomain routes
+                <>
+                  <Route path="/" element={<BlogLayout />}>
+                    <Route index element={<BlogHome />} />
+                    <Route path=":slug" element={<BlogPost />} />
+                  </Route>
+                </>
+              ) : (
+                // Main portfolio routes
+                <>
+                  <Route path="/" element={<Portfolio />} />
+                  <Route path="/admin/login" element={<Login />} />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                </>
+              )}
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </ColorModeProvider>
     </BrowserRouter>

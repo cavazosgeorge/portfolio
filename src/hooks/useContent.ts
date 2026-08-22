@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const API_BASE = "/api";
 
@@ -33,6 +33,17 @@ export interface Skill {
   sort_order: number;
 }
 
+export interface BlogSummary {
+  id: string;
+  title: string;
+  excerpt: string;
+  tags: string[];
+  featured: boolean;
+  draft: boolean;
+  created_at: string;
+  published_at?: string | null;
+}
+
 export interface SiteSettings {
   hero: {
     title: string;
@@ -58,7 +69,7 @@ function useApi<T>(endpoint: string, fallback: T): { data: T; loading: boolean; 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`${API_BASE}${endpoint}`);
@@ -72,11 +83,11 @@ function useApi<T>(endpoint: string, fallback: T): { data: T; loading: boolean; 
     } finally {
       setLoading(false);
     }
-  };
+  }, [endpoint]);
 
   useEffect(() => {
-    fetchData();
-  }, [endpoint]);
+    void fetchData();
+  }, [fetchData]);
 
   return { data, loading, error, refetch: fetchData };
 }
@@ -92,6 +103,10 @@ export function useExperience() {
 
 export function useSkills() {
   return useApi<Skill[]>("/skills", []);
+}
+
+export function useBlogPosts() {
+  return useApi<BlogSummary[]>("/blog", []);
 }
 
 export function useSettings() {

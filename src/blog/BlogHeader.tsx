@@ -1,111 +1,155 @@
-import { Container, Flex, Link, Text } from "@chakra-ui/react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useMemo } from "react";
+import { Box, Container, Flex, IconButton, Link, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-import { MagneticElement } from "../components/animations/MagneticElement";
-import { useIsMobile } from "../hooks/useIsMobile";
 import { useColorMode } from "../hooks/useColorMode";
-import { ColorModeToggle } from "../components/layout/ColorModeToggle";
 
-const headerBgColors = {
-  dark: {
-    mobile: ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.98)"],
-    desktop: ["rgba(10, 10, 15, 0)", "rgba(10, 10, 15, 0.9)"],
-  },
-  light: {
-    mobile: ["rgba(250, 249, 247, 0)", "rgba(250, 249, 247, 0.98)"],
-    desktop: ["rgba(250, 249, 247, 0)", "rgba(250, 249, 247, 0.92)"],
-  },
-};
+function SunIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20.3 15.1A8.5 8.5 0 0 1 8.9 3.7 8.5 8.5 0 1 0 20.3 15.1Z" />
+    </svg>
+  );
+}
+
+function getPortfolioUrl() {
+  const { hostname, port, protocol } = window.location;
+
+  if (hostname.endsWith(".localhost")) {
+    return `${protocol}//localhost${port ? `:${port}` : ""}`;
+  }
+
+  if (hostname.startsWith("www.blog.")) {
+    return `https://${hostname.replace("www.blog.", "www.")}`;
+  }
+
+  if (hostname.startsWith("blog.")) {
+    return `https://${hostname.replace("blog.", "")}`;
+  }
+
+  return "/";
+}
 
 export function BlogHeader() {
-  const isMobile = useIsMobile();
-  const { colorMode } = useColorMode();
-  const { scrollY } = useScroll();
-
-  const bgColors = useMemo(() => {
-    const theme = headerBgColors[colorMode];
-    return isMobile ? theme.mobile : theme.desktop;
-  }, [colorMode, isMobile]);
-
-  const headerBg = useTransform(scrollY, [0, 100], bgColors);
-
-  // Get the portfolio URL based on current hostname
-  const portfolioUrl = useMemo(() => {
-    const hostname = window.location.hostname;
-    if (hostname.startsWith("www.blog.")) {
-      return `https://${hostname.replace("www.blog.", "www.")}`;
-    }
-    if (hostname.startsWith("blog.")) {
-      return `https://${hostname.replace("blog.", "")}`;
-    }
-    return "/";
-  }, []);
+  const { isDark, toggleColorMode } = useColorMode();
+  const portfolioUrl = getPortfolioUrl();
 
   return (
-    <motion.header
-      key={colorMode}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        backgroundColor: headerBg,
-        backdropFilter: isMobile ? "none" : "blur(10px)",
-      }}
+    <Box
+      as="header"
+      position="sticky"
+      top={0}
+      zIndex={100}
+      bg="var(--surface-primary)"
+      borderBottom="1px solid"
+      borderColor="var(--border-subtle)"
     >
-      <Container maxW="container.xl">
-        <Flex h="80px" align="center" justify="space-between">
-          {/* Blog title */}
-          <RouterLink to="/" style={{ textDecoration: "none" }}>
-            <Text
-              fontFamily="var(--font-display)"
-              fontSize="lg"
-              fontWeight="600"
-              color="var(--text-primary)"
-              _hover={{ color: "var(--glow-cyan)" }}
-              transition="color 0.3s ease"
-            >
-              Blog
-            </Text>
+      <Container maxW="70rem">
+        <Flex minH="4rem" align="center" justify="space-between" gap={4}>
+          <RouterLink
+            to="/"
+            aria-label="George Cavazos writing home"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <Flex align="baseline" gap={{ base: 2, sm: 3 }}>
+              <Text
+                fontFamily="var(--font-display)"
+                fontSize={{ base: "sm", sm: "md" }}
+                fontWeight="600"
+                letterSpacing="-0.01em"
+              >
+                George Cavazos
+              </Text>
+              <Text
+                fontFamily="var(--font-mono)"
+                fontSize="xs"
+                color="var(--text-secondary)"
+              >
+                / Writing
+              </Text>
+            </Flex>
           </RouterLink>
 
-          {/* Navigation */}
-          <Flex as="nav" gap={8} align="center" display={{ base: "none", md: "flex" }}>
-            <MagneticElement strength={0.3} radius={60}>
-              <Link
-                href={portfolioUrl}
-                fontFamily="var(--font-mono)"
-                fontSize="sm"
-                color="var(--text-secondary)"
-                _hover={{ textDecoration: "none", color: "var(--glow-cyan)" }}
-                transition="color 0.3s ease"
-              >
+          <Flex as="nav" aria-label="Blog navigation" gap={{ base: 2, sm: 5 }} align="center">
+            <Link
+              href={portfolioUrl}
+              px={2}
+              py={2}
+              fontSize="sm"
+              fontWeight="500"
+              color="var(--text-secondary)"
+              textDecoration="none"
+              whiteSpace="nowrap"
+              _hover={{ color: "var(--accent-primary)", textDecoration: "none" }}
+              _focusVisible={{
+                color: "var(--accent-primary)",
+                outline: "2px solid var(--accent-primary)",
+                outlineOffset: "2px",
+              }}
+              css={{ transition: "color 160ms ease" }}
+            >
+              <Box as="span" display={{ base: "none", sm: "inline" }}>
+                Back to portfolio
+              </Box>
+              <Box as="span" display={{ base: "inline", sm: "none" }}>
                 Portfolio
-              </Link>
-            </MagneticElement>
-            <ColorModeToggle />
+              </Box>
+            </Link>
+
+            <IconButton
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              onClick={toggleColorMode}
+              variant="ghost"
+              size="sm"
+              minW="2.25rem"
+              h="2.25rem"
+              color="var(--text-secondary)"
+              border="1px solid"
+              borderColor="var(--border-subtle)"
+              borderRadius="full"
+              _hover={{ color: "var(--accent-primary)", bg: "var(--accent-soft)" }}
+              _focus={{ boxShadow: "none" }}
+              _focusVisible={{
+                color: "var(--accent-primary)",
+                outline: "2px solid var(--accent-primary)",
+                outlineOffset: "2px",
+                boxShadow: "none",
+              }}
+              css={{ transition: "color 160ms ease, background-color 160ms ease" }}
+            >
+              {isDark ? <SunIcon /> : <MoonIcon />}
+            </IconButton>
           </Flex>
         </Flex>
       </Container>
-
-      {/* Mobile toggle */}
-      <Flex
-        position="fixed"
-        bottom="1.5rem"
-        right="1.5rem"
-        zIndex={101}
-        display={{ base: "flex", md: "none" }}
-        bg="var(--bg-secondary)"
-        borderRadius="full"
-        boxShadow="0 4px 20px rgba(0, 0, 0, 0.15)"
-        p={2}
-        border="1px solid"
-        borderColor="var(--overlay-medium)"
-      >
-        <ColorModeToggle />
-      </Flex>
-    </motion.header>
+    </Box>
   );
 }

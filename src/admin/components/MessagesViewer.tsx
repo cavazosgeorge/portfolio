@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, VStack, Text, Button, Flex } from "@chakra-ui/react";
 
 interface Message {
@@ -19,13 +19,13 @@ export function MessagesViewer({ onUnreadCountChange }: MessagesViewerProps) {
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const updateUnreadCount = (msgs: Message[]) => {
+  const updateUnreadCount = useCallback((msgs: Message[]) => {
     if (onUnreadCountChange) {
       onUnreadCountChange(msgs.filter((m) => !m.read).length);
     }
-  };
+  }, [onUnreadCountChange]);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/messages", {
         credentials: "include",
@@ -40,11 +40,11 @@ export function MessagesViewer({ onUnreadCountChange }: MessagesViewerProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [updateUnreadCount]);
 
   useEffect(() => {
-    fetchMessages();
-  }, []);
+    void fetchMessages();
+  }, [fetchMessages]);
 
   const markAsRead = async (id: number) => {
     const res = await fetch(`/api/admin/messages/${id}/read`, {

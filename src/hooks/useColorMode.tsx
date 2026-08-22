@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
 type ColorMode = "light" | "dark";
 
@@ -13,57 +13,35 @@ interface ColorModeContextValue {
 const ColorModeContext = createContext<ColorModeContextValue | null>(null);
 
 function getInitialColorMode(): ColorMode {
-  if (typeof window === "undefined") return "dark";
-  const stored = localStorage.getItem("color-mode") as ColorMode | null;
-  return stored || "dark";
+  if (typeof window === "undefined") return "light";
+  const stored = localStorage.getItem("color-mode");
+  const domTheme = document.documentElement.getAttribute("data-theme");
+
+  if (stored === "light" || stored === "dark") return stored;
+  if (domTheme === "light" || domTheme === "dark") return domTheme;
+  return "light";
+}
+
+function applyColorMode(mode: ColorMode) {
+  document.documentElement.setAttribute("data-theme", mode);
+  document.documentElement.style.colorScheme = mode;
+  localStorage.setItem("color-mode", mode);
+
+  const themeColorMeta = document.getElementById("theme-color");
+  themeColorMeta?.setAttribute("content", mode === "dark" ? "#11130f" : "#f6f4ee");
 }
 
 export function ColorModeProvider({ children }: { children: ReactNode }) {
   const [colorMode, setColorModeState] = useState<ColorMode>(getInitialColorMode);
 
-  // Sync with DOM on mount (in case SSR/hydration mismatch)
-  useEffect(() => {
-    const current = document.documentElement.getAttribute("data-theme") as ColorMode;
-    if (current && current !== colorMode) {
-      setColorModeState(current);
-    }
-  }, []);
-
   const toggleColorMode = useCallback(() => {
     const newMode: ColorMode = colorMode === "dark" ? "light" : "dark";
-
-    // Update DOM
-    document.documentElement.setAttribute("data-theme", newMode);
-    document.documentElement.style.colorScheme = newMode;
-
-    // Update localStorage
-    localStorage.setItem("color-mode", newMode);
-
-    // Update theme-color meta tag
-    const themeColorMeta = document.getElementById("theme-color");
-    if (themeColorMeta) {
-      themeColorMeta.setAttribute("content", newMode === "dark" ? "#0a0a0f" : "#faf9f7");
-    }
-
-    // Update state
+    applyColorMode(newMode);
     setColorModeState(newMode);
   }, [colorMode]);
 
   const setMode = useCallback((mode: ColorMode) => {
-    // Update DOM
-    document.documentElement.setAttribute("data-theme", mode);
-    document.documentElement.style.colorScheme = mode;
-
-    // Update localStorage
-    localStorage.setItem("color-mode", mode);
-
-    // Update theme-color meta tag
-    const themeColorMeta = document.getElementById("theme-color");
-    if (themeColorMeta) {
-      themeColorMeta.setAttribute("content", mode === "dark" ? "#0a0a0f" : "#faf9f7");
-    }
-
-    // Update state
+    applyColorMode(mode);
     setColorModeState(mode);
   }, []);
 
@@ -82,6 +60,8 @@ export function ColorModeProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Fast refresh warning is intentionally scoped to this colocated context hook.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useColorMode(): ColorModeContextValue {
   const context = useContext(ColorModeContext);
   if (!context) {

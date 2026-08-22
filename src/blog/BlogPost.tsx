@@ -1,7 +1,6 @@
-import { Box, Container, VStack, Text, Flex } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Box, Container, Flex, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { MarkdownRenderer } from "../components/markdown/MarkdownRenderer";
 
 interface BlogPostData {
@@ -11,8 +10,17 @@ interface BlogPostData {
   content: string;
   tags: string[];
   featured: boolean;
+  published_at?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 export function BlogPost() {
@@ -22,37 +30,51 @@ export function BlogPost() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!slug) return;
+    document.title = post ? `${post.title} | George Cavazos` : "Writing | George Cavazos";
+  }, [post]);
 
-    fetch(`/api/blog/${slug}`)
+  useEffect(() => {
+    if (!slug) {
+      setError("Post not found");
+      setLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    setLoading(true);
+    setError(null);
+
+    fetch(`/api/blog/${slug}`, { signal: controller.signal })
       .then((res) => {
-        if (!res.ok) throw new Error("Post not found");
+        if (!res.ok) {
+          throw new Error("Post not found");
+        }
+
         return res.json();
       })
       .then((data) => {
         setPost(data);
         setLoading(false);
       })
-      .catch((err) => {
-        setError(err.message);
+      .catch((fetchError: unknown) => {
+        if (fetchError instanceof DOMException && fetchError.name === "AbortError") {
+          return;
+        }
+
+        setError(fetchError instanceof Error ? fetchError.message : "Post not found");
         setLoading(false);
       });
-  }, [slug]);
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+    return () => controller.abort();
+  }, [slug]);
 
   if (loading) {
     return (
-      <Box py="var(--section-padding)">
-        <Container maxW="container.md">
-          <Text color="var(--text-secondary)" textAlign="center">
-            Loading...
+      <Box py={{ base: 16, md: 24 }}>
+        <Container maxW="48rem">
+          <Text role="status" aria-live="polite" color="var(--text-secondary)">
+            Loading note…
           </Text>
         </Container>
       </Box>
@@ -61,21 +83,27 @@ export function BlogPost() {
 
   if (error || !post) {
     return (
-      <Box py="var(--section-padding)">
-        <Container maxW="container.md">
-          <VStack gap={4} textAlign="center">
-            <Text fontSize="2xl" color="var(--text-primary)" fontFamily="var(--font-display)">
+      <Box py={{ base: 16, md: 24 }}>
+        <Container maxW="48rem">
+          <VStack gap={5} align="start">
+            <Text
+              fontSize={{ base: "3xl", md: "4xl" }}
+              color="var(--text-primary)"
+              fontFamily="var(--font-display)"
+              fontWeight="600"
+              letterSpacing="-0.035em"
+            >
               Post not found
             </Text>
-            <Text color="var(--text-secondary)">
+            <Text color="var(--text-secondary)" fontSize="lg">
               The post you're looking for doesn't exist or has been removed.
             </Text>
-            <Link to="/">
+            <Link to="/" style={{ display: "inline-block", textDecoration: "none" }}>
               <Text
-                color="var(--glow-cyan)"
-                fontFamily="var(--font-mono)"
+                color="var(--accent-primary)"
+                fontWeight="600"
                 fontSize="sm"
-                _hover={{ textDecoration: "underline" }}
+                _hover={{ textDecoration: "underline", textUnderlineOffset: "0.25em" }}
               >
                 ← Back to blog
               </Text>
@@ -86,98 +114,121 @@ export function BlogPost() {
     );
   }
 
+  const displayDate = post.published_at || post.created_at;
+
   return (
-    <Box py="var(--section-padding)">
-      <Container maxW="container.md">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <VStack gap={8} align="stretch">
-            {/* Back link */}
-            <Link to="/">
-              <Text
-                color="var(--glow-cyan)"
-                fontFamily="var(--font-mono)"
-                fontSize="sm"
-                _hover={{ textDecoration: "underline" }}
-              >
-                ← Back to blog
-              </Text>
-            </Link>
+    <Box py={{ base: 12, md: 20 }}>
+      <Container maxW="58rem">
+        <Box as="article">
+          <VStack gap={{ base: 9, md: 12 }} align="stretch">
+            <Box maxW="48rem" mx="auto" w="100%">
+              <Link to="/" style={{ display: "inline-block", textDecoration: "none" }}>
+                <Text
+                  color="var(--text-secondary)"
+                  fontSize="sm"
+                  fontWeight="500"
+                  _hover={{ color: "var(--accent-primary)" }}
+                  css={{ transition: "color 160ms ease" }}
+                >
+                  ← All writing
+                </Text>
+              </Link>
+            </Box>
 
-            {/* Post header */}
-            <Box>
-              {/* Date */}
+            <Box as="header" maxW="48rem" mx="auto" w="100%">
               <Text
-                fontSize="sm"
+                display="block"
                 fontFamily="var(--font-mono)"
-                color="var(--glow-cyan)"
-                mb={3}
+                fontSize="xs"
+                color="var(--accent-primary)"
+                letterSpacing="0.06em"
+                textTransform="uppercase"
+                mb={5}
               >
-                {formatDate(post.created_at)}
+                <time dateTime={displayDate}>{formatDate(displayDate)}</time>
               </Text>
 
-              {/* Title */}
               <Text
-                fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                as="h1"
+                fontSize={{ base: "4xl", sm: "5xl", md: "6xl" }}
                 fontFamily="var(--font-display)"
                 fontWeight="600"
                 color="var(--text-primary)"
-                lineHeight={1.2}
-                mb={4}
+                letterSpacing="-0.045em"
+                lineHeight={{ base: 1.1, md: 1.04 }}
+                textWrap="balance"
+                mb={post.excerpt ? 6 : 7}
               >
                 {post.title}
               </Text>
 
-              {/* Tags */}
+              {post.excerpt && (
+                <Text
+                  color="var(--text-secondary)"
+                  fontSize={{ base: "lg", md: "xl" }}
+                  lineHeight={1.65}
+                  mb={7}
+                >
+                  {post.excerpt}
+                </Text>
+              )}
+
               {post.tags.length > 0 && (
-                <Flex gap={2} flexWrap="wrap">
+                <Flex gap={{ base: 3, md: 4 }} flexWrap="wrap">
                   {post.tags.map((tag) => (
-                    <Box
+                    <Text
                       key={tag}
-                      px={3}
-                      py={1}
-                      bg="var(--overlay-subtle)"
-                      borderRadius="full"
-                      fontSize="sm"
+                      fontSize="xs"
                       fontFamily="var(--font-mono)"
                       color="var(--text-secondary)"
                     >
                       {tag}
-                    </Box>
+                    </Text>
                   ))}
                 </Flex>
               )}
             </Box>
 
-            {/* Divider */}
-            <Box h="1px" bg="var(--overlay-subtle)" />
+            <Box
+              maxW="48rem"
+              mx="auto"
+              w="100%"
+              borderTop="1px solid"
+              borderColor="var(--border-subtle)"
+              pt={{ base: 8, md: 10 }}
+            >
+              <MarkdownRenderer content={post.content} />
+            </Box>
 
-            {/* Content */}
-            <MarkdownRenderer content={post.content} />
-
-            {/* Footer */}
-            <Box h="1px" bg="var(--overlay-subtle)" mt={8} />
-
-            <Flex justify="space-between" align="center" py={4}>
-              <Link to="/">
+            <Flex
+              maxW="48rem"
+              mx="auto"
+              w="100%"
+              justify="space-between"
+              align={{ base: "start", sm: "center" }}
+              direction={{ base: "column", sm: "row" }}
+              gap={4}
+              pt={7}
+              borderTop="1px solid"
+              borderColor="var(--border-subtle)"
+            >
+              <Link to="/" style={{ display: "inline-block", textDecoration: "none" }}>
                 <Text
-                  color="var(--glow-cyan)"
-                  fontFamily="var(--font-mono)"
+                  color="var(--accent-primary)"
+                  fontWeight="600"
                   fontSize="sm"
-                  _hover={{ textDecoration: "underline" }}
+                  _hover={{ textDecoration: "underline", textUnderlineOffset: "0.25em" }}
                 >
-                  ← Back to blog
+                  ← All writing
                 </Text>
               </Link>
-              <Text fontSize="sm" color="var(--text-secondary)">
+
+              <Text fontSize="xs" fontFamily="var(--font-mono)" color="var(--text-secondary)">
                 Last updated: {formatDate(post.updated_at)}
               </Text>
             </Flex>
           </VStack>
-        </motion.div>
+        </Box>
       </Container>
     </Box>
   );

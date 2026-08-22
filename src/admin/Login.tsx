@@ -47,22 +47,18 @@ export function Login() {
             </Text>
 
             {error && (
-              <Text color="var(--warm-coral)" fontSize="sm">
+              <Text role="alert" color="var(--danger-text)" fontSize="sm">
                 {error}
               </Text>
             )}
 
             <Box w="100%">
-              <Text
-                fontSize="sm"
-                fontFamily="var(--font-mono)"
-                color="var(--text-secondary)"
-                mb={2}
-              >
-                Email
-              </Text>
+              <label className="form-label" htmlFor="admin-email">Email</label>
               <Input
+                id="admin-email"
+                name="email"
                 type="email"
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 bg="var(--bg-primary)"
@@ -78,16 +74,12 @@ export function Login() {
             </Box>
 
             <Box w="100%">
-              <Text
-                fontSize="sm"
-                fontFamily="var(--font-mono)"
-                color="var(--text-secondary)"
-                mb={2}
-              >
-                Password
-              </Text>
+              <label className="form-label" htmlFor="admin-password">Password</label>
               <Input
+                id="admin-password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 bg="var(--bg-primary)"

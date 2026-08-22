@@ -1,229 +1,92 @@
-import { Box, Container, Text, VStack, Flex } from "@chakra-ui/react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { RevealOnScroll } from "../animations/RevealOnScroll";
+import { Box, Container, Flex, Text, VStack } from "@chakra-ui/react";
 import { useExperience } from "../../hooks/useContent";
 
-interface TimelineItemProps {
-  role: string;
-  company: string;
-  period: string;
-  description: string;
-  technologies?: string[];
-  index: number;
-  isLast: boolean;
-}
-
-function TimelineItem({
-  role,
-  company,
-  period,
-  description,
-  technologies,
-  index,
-  isLast,
-}: TimelineItemProps) {
-  const isEven = index % 2 === 0;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: isEven ? -30 : 30 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <Flex
-        direction={{ base: "column", md: isEven ? "row" : "row-reverse" }}
-        align={{ base: "flex-start", md: "center" }}
-        gap={6}
-        mb={isLast ? 0 : 12}
-      >
-        {/* Content */}
-        <Box
-          flex={1}
-          textAlign={{ base: "left", md: isEven ? "right" : "left" }}
-        >
-          <Text
-            fontSize="sm"
-            fontFamily="var(--font-mono)"
-            color="var(--glow-cyan)"
-            mb={1}
-          >
-            {period}
-          </Text>
-          <Text
-            fontSize="xl"
-            fontFamily="var(--font-display)"
-            fontWeight="600"
-            color="var(--text-primary)"
-            mb={1}
-          >
-            {role}
-          </Text>
-          <Text
-            fontSize="md"
-            color="var(--warm-coral)"
-            fontFamily="var(--font-display)"
-            mb={3}
-          >
-            {company}
-          </Text>
-          <Text
-            fontSize="sm"
-            color="var(--text-secondary)"
-            lineHeight="1.7"
-            mb={3}
-          >
-            {description}
-          </Text>
-          {technologies && (
-            <Flex
-              gap={2}
-              flexWrap="wrap"
-              justify={{ base: "flex-start", md: isEven ? "flex-end" : "flex-start" }}
-            >
-              {technologies.map((tech) => (
-                <Box
-                  key={tech}
-                  px={2}
-                  py={1}
-                  bg="var(--overlay-subtle)"
-                  borderRadius="md"
-                  fontSize="xs"
-                  fontFamily="var(--font-mono)"
-                  color="var(--text-secondary)"
-                >
-                  {tech}
-                </Box>
-              ))}
-            </Flex>
-          )}
-        </Box>
-
-        {/* Timeline dot */}
-        <Box
-          position="relative"
-          display={{ base: "none", md: "flex" }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          >
-            <Box
-              w={4}
-              h={4}
-              borderRadius="full"
-              bg="var(--glow-cyan)"
-              boxShadow="0 0 20px var(--glow-cyan)"
-            />
-          </motion.div>
-          {!isLast && (
-            <Box
-              position="absolute"
-              top="100%"
-              left="50%"
-              transform="translateX(-50%)"
-              w="2px"
-              h="80px"
-              bg="linear-gradient(to bottom, var(--glow-cyan), transparent)"
-            />
-          )}
-        </Box>
-
-        {/* Spacer for alignment */}
-        <Box flex={1} display={{ base: "none", md: "block" }} />
-      </Flex>
-    </motion.div>
-  );
-}
-
 export function Experience() {
-  const { data: experience } = useExperience();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  const lineHeight = useTransform(scrollYProgress, [0, 0.5], ["0%", "100%"]);
+  const { data: experience, loading, error } = useExperience();
 
   return (
-    <Box
-      as="section"
-      id="experience"
-      py="var(--section-padding)"
-      position="relative"
-      ref={containerRef}
-    >
-      {/* Background line (mobile) */}
-      <Box
-        display={{ base: "block", md: "none" }}
-        position="absolute"
-        left="0"
-        top="200px"
-        bottom="100px"
-        w="2px"
-        bg="var(--bg-secondary)"
-        ml={4}
-      >
-        <motion.div
-          style={{
-            height: lineHeight,
-            background: "var(--glow-cyan)",
-            width: "100%",
-          }}
-        />
-      </Box>
-
+    <Box as="section" id="experience" py="var(--section-padding)" bg="var(--surface-primary)">
       <Container maxW="container.lg">
-        <VStack gap={12} align="stretch">
-          {/* Section header */}
-          <RevealOnScroll>
-            <Box textAlign="center">
-              <Text
-                fontSize="sm"
-                fontFamily="var(--font-mono)"
-                color="var(--glow-cyan)"
-                letterSpacing="0.2em"
-                textTransform="uppercase"
-                mb={2}
-              >
-                Experience
-              </Text>
-              <Text
-                fontSize={{ base: "3xl", md: "4xl" }}
-                fontFamily="var(--font-display)"
-                fontWeight="600"
-                lineHeight="1.2"
-              >
-                Where I've{" "}
-                <Text as="span" color="var(--soft-lavender)">
-                  worked
-                </Text>
-              </Text>
-            </Box>
-          </RevealOnScroll>
-
-          {/* Timeline */}
-          <Box position="relative" pl={{ base: 8, md: 0 }}>
-            {experience.map((exp, index) => (
-              <TimelineItem
-                key={exp.id}
-                role={exp.role}
-                company={exp.company}
-                period={exp.period}
-                description={exp.description}
-                technologies={exp.technologies}
-                index={index}
-                isLast={index === experience.length - 1}
-              />
-            ))}
+        <Box display="grid" gridTemplateColumns={{ base: "1fr", lg: "minmax(250px, 0.38fr) 1fr" }} gap={{ base: 10, lg: 20 }}>
+          <Box>
+            <Text className="section-kicker">Experience</Text>
+            <Text as="h2" className="section-title">
+              Building reliable systems, end to end.
+            </Text>
+            <Text mt={5} color="var(--text-secondary)" fontSize={{ base: "md", md: "lg" }} lineHeight="1.75">
+              Enterprise automation, infrastructure, product engineering, and AI delivery across regulated and fast-moving environments.
+            </Text>
           </Box>
-        </VStack>
+
+          <VStack align="stretch" gap={0} borderTop="1px solid var(--border-subtle)" aria-busy={loading}>
+            {loading && experience.length === 0
+              ? [0, 1, 2].map((index) => (
+                  <Box key={index} py={9} borderBottom="1px solid var(--border-subtle)">
+                    <Box className="editorial-skeleton" h="24px" maxW="620px" />
+                  </Box>
+                ))
+              : experience.map((item, index) => (
+                  <Box key={item.id} as="article" py={{ base: 8, md: 9 }} borderBottom="1px solid var(--border-subtle)">
+                    <Box
+                      display="grid"
+                      gridTemplateColumns={{ base: "1fr", md: "170px minmax(0, 1fr)" }}
+                      gap={{ base: 3, md: 8 }}
+                    >
+                      <Box>
+                        <Text fontFamily="var(--font-mono)" fontSize="xs" color="var(--text-secondary)">
+                          {item.period}
+                        </Text>
+                        {index === 0 && (
+                          <Text
+                            mt={3}
+                            display="inline-flex"
+                            px={2.5}
+                            py={1}
+                            borderRadius="full"
+                            bg="var(--accent-soft)"
+                            color="var(--accent-primary)"
+                            fontFamily="var(--font-mono)"
+                            fontSize="xs"
+                            fontWeight="600"
+                          >
+                            CURRENT
+                          </Text>
+                        )}
+                      </Box>
+
+                      <Box>
+                        <Flex direction={{ base: "column", sm: "row" }} justify="space-between" gap={1} align={{ sm: "baseline" }}>
+                          <Text as="h3" fontFamily="var(--font-display)" fontSize={{ base: "xl", md: "2xl" }} fontWeight="600">
+                            {item.role}
+                          </Text>
+                          <Text color="var(--accent-primary)" fontWeight="600" flexShrink={0}>
+                            {item.company}
+                          </Text>
+                        </Flex>
+                        <Text mt={4} color="var(--text-secondary)" lineHeight="1.75">
+                          {item.description}
+                        </Text>
+                        {item.technologies.length > 0 && (
+                          <Flex mt={5} gap={2} flexWrap="wrap">
+                            {item.technologies.slice(0, 5).map((technology) => (
+                              <Text key={technology} className="editorial-tag">
+                                {technology}
+                              </Text>
+                            ))}
+                          </Flex>
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
+                ))}
+
+            {error && !loading && experience.length === 0 && (
+              <Text py={8} color="var(--text-secondary)" role="status">
+                Experience details are temporarily unavailable.
+              </Text>
+            )}
+          </VStack>
+        </Box>
       </Container>
     </Box>
   );
