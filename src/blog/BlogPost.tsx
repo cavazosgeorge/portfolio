@@ -23,6 +23,26 @@ function formatDate(dateStr: string) {
   });
 }
 
+function withoutDuplicateLeadingTitle(content: string, title: string) {
+  const lines = content.split("\n");
+  const firstContentLine = lines.findIndex((line) => line.trim().length > 0);
+
+  if (firstContentLine === -1) return content;
+
+  const headingMatch = lines[firstContentLine].trim().match(/^#\s+(.+?)\s*#*$/);
+  const normalizedHeading = headingMatch?.[1].trim().replace(/\s+/g, " ").toLocaleLowerCase();
+  const normalizedTitle = title.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+
+  if (!normalizedHeading || normalizedHeading !== normalizedTitle) return content;
+
+  lines.splice(firstContentLine, 1);
+  while (lines[firstContentLine]?.trim() === "") {
+    lines.splice(firstContentLine, 1);
+  }
+
+  return lines.join("\n");
+}
+
 export function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<BlogPostData | null>(null);
@@ -197,7 +217,7 @@ export function BlogPost() {
               borderColor="var(--border-subtle)"
               pt={{ base: 8, md: 10 }}
             >
-              <MarkdownRenderer content={post.content} />
+              <MarkdownRenderer content={withoutDuplicateLeadingTitle(post.content, post.title)} />
             </Box>
 
             <Flex
