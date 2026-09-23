@@ -9,7 +9,7 @@ async function read(path: string) {
   return res;
 }
 const html = await (await read("/")).text();
-if (!html.includes("George Cavazos | Senior Automation IT/OT Engineer"))
+if (!html.includes("George Cavazos | Lead AI Engineer"))
   throw new Error("SEO title missing");
 const assets = Array.from(
   html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g),

@@ -4,14 +4,14 @@ export function Hero() {
   return (
     <section id="top" className="hero page-shell">
       <div className="hero-main">
-        <p className="role-label">Senior Automation IT/OT Engineer</p>
+        <p className="role-label">Lead AI Engineer</p>
         <h1>
-          Building reliable systems where industrial automation, data, and AI
-          meet.
+          Building reliable AI systems for real-world engineering.
         </h1>
         <p className="hero-intro">
-          I turn complex operational problems into dependable platforms, useful
-          data, and thoughtful software people can trust.
+          I lead the technical team building AI-powered applications for Pfizer's
+          Kalamazoo manufacturing site, with hands-on work across agentic AI,
+          secure OT/IT integration, and full-stack software.
         </p>
         <div className="hero-actions">
           <Button asChild size="lg">
@@ -32,11 +32,11 @@ export function Hero() {
         <dl>
           <div>
             <dt>Current role</dt>
-            <dd>Senior Engineer at Pfizer</dd>
+            <dd>Lead AI Engineer at Pfizer</dd>
           </div>
           <div>
             <dt>Core focus</dt>
-            <dd>Industrial automation + IT/OT</dd>
+            <dd>Agentic AI + secure OT/IT</dd>
           </div>
           <div>
             <dt>Built end to end</dt>
