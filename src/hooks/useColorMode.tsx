@@ -28,7 +28,7 @@ function applyColorMode(mode: ColorMode) {
   localStorage.setItem("color-mode", mode);
 
   const themeColorMeta = document.getElementById("theme-color");
-  themeColorMeta?.setAttribute("content", mode === "dark" ? "#11130f" : "#f6f4ee");
+  themeColorMeta?.setAttribute("content", mode === "dark" ? "#142033" : "#f3f6fa");
 }
 
 export function ColorModeProvider({ children }: { children: ReactNode }) {

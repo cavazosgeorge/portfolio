@@ -1,135 +1,113 @@
-import { Box, Button, Container, Flex, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { useSetting } from "../../hooks/useContent";
-
-const DEFAULT_CONTACT = {
-  heading: "Get in touch",
-  email: "",
-  github: "https://github.com/cavazosgeorge",
-  linkedin: "",
-};
-
-const inputStyles = {
-  bg: "var(--bg-secondary)",
-  border: "1px solid var(--border-subtle)",
-  borderRadius: "10px",
-  color: "var(--text-primary)",
-  fontFamily: "var(--font-body)",
-  fontSize: "md",
-  px: 4,
-  py: 3,
-  _placeholder: { color: "var(--text-tertiary)" },
-  _hover: { borderColor: "var(--border-strong)" },
-  _focus: { borderColor: "var(--accent-primary)", boxShadow: "none", outline: "none" },
-  _focusVisible: { borderColor: "var(--accent-primary)", boxShadow: "0 0 0 3px var(--accent-soft)", outline: "none" },
-  transition: "border-color 160ms ease, box-shadow 160ms ease",
-};
-
+import { ArrowUpRight, Check, LoaderCircle } from "lucide-react";
+import { useSetting } from "@/hooks/useContent";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { ContentState } from "@/components/layout/ContentState";
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const { data: contactData } = useSetting("contact");
-  const contact = contactData || DEFAULT_CONTACT;
-
-  const socialLinks = [
-    { name: "GitHub", href: contact.github },
-    { name: "LinkedIn", href: contact.linkedin },
-    { name: "Email", href: contact.email ? `mailto:${contact.email}` : "" },
-  ].filter((link) => Boolean(link.href));
-
-  const handleSubmit = async (event: React.FormEvent) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const {
+    data: contact,
+    loading,
+    error: contactError,
+    refetch,
+  } = useSetting("contact");
+  const links = [
+    { name: "GitHub", href: contact?.github },
+    { name: "LinkedIn", href: contact?.linkedin },
+    { name: "Email", href: contact?.email ? `mailto:${contact.email}` : "" },
+  ].filter((l) => l.href);
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setIsSubmitting(true);
     setError(null);
-
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      if (!response.ok) throw new Error("Failed to send message");
-
+      if (!response.ok) throw new Error();
       setSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
     } catch {
-      setError("Something went wrong. Please try again or use one of the links below.");
+      setError(
+        "Your message could not be sent. Please try again or use one of the contact links.",
+      );
     } finally {
       setIsSubmitting(false);
     }
-  };
-
+  }
   return (
-    <Box as="section" id="contact" pt="var(--section-padding)" pb={{ base: 8, md: 10 }}>
-      <Container maxW="container.lg">
-        <Box
-          display="grid"
-          gridTemplateColumns={{ base: "1fr", lg: "minmax(0, 0.8fr) minmax(420px, 1.2fr)" }}
-          gap={{ base: 12, lg: 20 }}
-          alignItems="start"
-        >
-          <Box>
-            <Text className="section-kicker">{contact.heading}</Text>
-            <Text as="h2" className="section-title">
-              Let’s build something useful.
-            </Text>
-            <Text mt={5} maxW="520px" color="var(--text-secondary)" fontSize={{ base: "md", md: "lg" }} lineHeight="1.75">
-              Have a project, technical challenge, or idea worth exploring? Send a note and tell me what you are working on.
-            </Text>
-
-            {socialLinks.length > 0 && (
-              <Flex mt={8} gap={6} flexWrap="wrap">
-                {socialLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    color="var(--accent-primary)"
-                    fontFamily="var(--font-mono)"
-                    fontSize="sm"
-                    fontWeight="600"
-                    textDecoration="none"
-                    _hover={{ textDecoration: "underline" }}
+    <section id="contact" className="section section-tint">
+      <div className="page-shell">
+        <div className="contact-grid">
+          <div className="section-heading-block">
+            <p className="section-label">
+              {contact?.heading || "Get in touch"}
+            </p>
+            <h2>Let’s build something useful.</h2>
+            <p>
+              Have a project, technical challenge, or idea worth exploring? Send
+              a note and tell me what you are working on.
+            </p>
+            <div className="social-links">
+              {links.map((l) => (
+                <Button asChild variant="outline" key={l.name}>
+                  <a
+                    href={l.href}
+                    target={l.href?.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      l.href?.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
                   >
-                    {link.name} ↗
-                  </Link>
-                ))}
-              </Flex>
+                    {l.name}
+                    <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                  </a>
+                </Button>
+              ))}
+            </div>
+            {contactError && (
+              <ContentState
+                loading={loading}
+                error={contactError}
+                empty={false}
+                retry={refetch}
+              />
             )}
-          </Box>
-
+          </div>
           {submitted ? (
-            <Box
-              role="status"
-              border="1px solid var(--accent-primary)"
-              borderRadius="12px"
-              bg="var(--accent-soft)"
-              p={{ base: 7, md: 9 }}
-            >
-              <Text as="h3" fontFamily="var(--font-display)" fontSize="2xl" fontWeight="600">
-                Message sent.
-              </Text>
-              <Text mt={2} color="var(--text-secondary)">
+            <Alert role="status">
+              <Check aria-hidden="true" />
+              <AlertTitle>Message sent.</AlertTitle>
+              <AlertDescription>
                 Thanks for reaching out. I’ll get back to you soon.
-              </Text>
-            </Box>
+              </AlertDescription>
+            </Alert>
           ) : (
-            <Box
-              as="form"
+            <form
               onSubmit={handleSubmit}
-              bg="var(--surface-primary)"
-              border="1px solid var(--border-subtle)"
-              borderRadius="12px"
-              p={{ base: 6, md: 8 }}
+              className="contact-form"
+              aria-label="Contact George"
+              aria-busy={isSubmitting}
             >
-              <VStack gap={5} align="stretch">
-                <Flex direction={{ base: "column", md: "row" }} gap={5}>
-                  <Box flex={1}>
-                    <label className="form-label" htmlFor="contact-name">Name</label>
+              <FieldGroup>
+                <FieldGroup className="contact-name-row">
+                  <Field>
+                    <FieldLabel htmlFor="contact-name">Name</FieldLabel>
                     <Input
                       id="contact-name"
                       name="name"
@@ -137,12 +115,13 @@ export function Contact() {
                       placeholder="Your name"
                       required
                       value={formData.name}
-                      onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
-                      {...inputStyles}
+                      onChange={(e) =>
+                        setFormData((v) => ({ ...v, name: e.target.value }))
+                      }
                     />
-                  </Box>
-                  <Box flex={1}>
-                    <label className="form-label" htmlFor="contact-email">Email</label>
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="contact-email">Email</FieldLabel>
                     <Input
                       id="contact-email"
                       name="email"
@@ -151,71 +130,62 @@ export function Contact() {
                       placeholder="you@example.com"
                       required
                       value={formData.email}
-                      onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
-                      {...inputStyles}
+                      onChange={(e) =>
+                        setFormData((v) => ({ ...v, email: e.target.value }))
+                      }
                     />
-                  </Box>
-                </Flex>
-
-                <Box>
-                  <label className="form-label" htmlFor="contact-message">Message</label>
+                  </Field>
+                </FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="contact-message">Message</FieldLabel>
                   <Textarea
                     id="contact-message"
                     name="message"
                     placeholder="What are you building?"
                     rows={6}
                     required
-                    resize="vertical"
                     value={formData.message}
-                    onChange={(event) => setFormData((current) => ({ ...current, message: event.target.value }))}
-                    {...inputStyles}
+                    onChange={(e) =>
+                      setFormData((v) => ({ ...v, message: e.target.value }))
+                    }
                   />
-                </Box>
-
+                </Field>
                 {error && (
-                  <Text role="alert" color="var(--danger-text)" fontSize="sm">
-                    {error}
-                  </Text>
+                  <Alert variant="destructive">
+                    <AlertTitle>Message not sent</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
                 )}
-
                 <Button
                   type="submit"
-                  alignSelf="flex-start"
-                  bg="var(--accent-primary)"
-                  color="var(--accent-contrast)"
-                  borderRadius="8px"
-                  px={6}
-                  py={5}
-                  fontWeight="700"
+                  size="lg"
                   disabled={isSubmitting}
-                  _hover={{ bg: "var(--accent-hover)" }}
-                  _focus={{ boxShadow: "none" }}
-                  _focusVisible={{ outline: "3px solid var(--accent-soft)", outlineOffset: "3px", boxShadow: "none" }}
-                  transition="background-color 160ms ease"
+                  className="self-start"
                 >
+                  {isSubmitting && (
+                    <LoaderCircle
+                      data-icon="inline-start"
+                      className="animate-spin"
+                      aria-hidden="true"
+                    />
+                  )}
                   {isSubmitting ? "Sending…" : "Send message"}
                 </Button>
-              </VStack>
-            </Box>
+              </FieldGroup>
+            </form>
           )}
-        </Box>
-
-        <Flex
-          mt={{ base: 16, md: 24 }}
-          pt={6}
-          borderTop="1px solid var(--border-subtle)"
-          justify="space-between"
-          align={{ base: "flex-start", md: "center" }}
-          direction={{ base: "column", md: "row" }}
-          gap={3}
-          color="var(--text-tertiary)"
-          fontFamily="var(--font-mono)"
-          fontSize="xs"
-        >
-          <Text>© {new Date().getFullYear()} George Cavazos</Text>
-          <Text>Designed for clarity. Built for the long run.</Text>
-        </Flex>
-      </Container>
-    </Box>
+        </div>
+        <footer className="site-footer">
+          <Separator />
+          <div>
+            <span>© {new Date().getFullYear()} George Cavazos</span>
+            <span>Designed for clarity. Built for the long run.</span>
+            <a href="#top" className="text-link">
+              Back to top
+            </a>
+          </div>
+        </footer>
+      </div>
+    </section>
   );
 }

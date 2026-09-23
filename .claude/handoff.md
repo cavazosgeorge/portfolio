@@ -1,5 +1,13 @@
 # Session Handoff
 
+## Current handoff: September 22, 2026
+
+Portfolio public UI refactored to project-owned Radix shadcn + Tailwind v4. CMS remains Chakra, lazily loaded. Current checkout is `development`; publish through `development:main` without switching branches. Primary URLs are `https://www.cavazosgeorge.com` and `https://www.blog.cavazosgeorge.com`. Design and QA contracts: `docs/DESIGN_SYSTEM.md`, `docs/UI_REFACTOR_2026-09-22.md`. Exact local, verification, backup, deploy and rollback commands are at the bottom of README. No database/API migrations. Preserve `/app/data`, existing content and the unrelated untracked `.claude/multi-claude-output/`.
+
+The older entries below are historical and may describe superseded visuals, routes or branch state.
+
+## Historical handoff
+
 ## Project Info
 - **Name**: Portfolio (Liquid Dreamscape)
 - **Stack**: React 18 + TypeScript + Vite + Bun + Hono + SQLite + Chakra UI + Framer Motion

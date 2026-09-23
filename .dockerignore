@@ -8,3 +8,8 @@ README.md
 *.md
 .vscode
 .idea
+.claude
+data
+*.db
+*.db-wal
+*.db-shm

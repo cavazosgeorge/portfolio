@@ -1,137 +1,52 @@
-import { Box, Container, Flex, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
-
-const proofPoints = [
-  { label: "Current role", value: "Senior Engineer at Pfizer" },
-  { label: "Core focus", value: "Industrial automation + IT/OT" },
-  { label: "Built end to end", value: "AI, data + full-stack products" },
-] as const;
-
+import { ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 export function Hero() {
   return (
-    <Box
-      as="section"
-      id="top"
-      position="relative"
-      minH={{ base: "auto", lg: "calc(82vh - 68px)" }}
-      display="flex"
-      alignItems="center"
-      py={{ base: 20, md: 24, lg: 28 }}
-    >
-      <Container maxW="container.xl">
-        <VStack align="stretch" gap={{ base: 12, md: 16 }}>
-          <Box maxW="980px">
-            <Text
-              fontSize={{ base: "xs", md: "sm" }}
-              fontFamily="var(--font-mono)"
-              fontWeight="500"
-              color="var(--accent-primary)"
-              letterSpacing="0.12em"
-              textTransform="uppercase"
-              mb={{ base: 5, md: 7 }}
-            >
-              Senior Automation IT/OT Engineer
-            </Text>
-
-            <Text
-              as="h1"
-              fontSize={{ base: "4xl", sm: "5xl", md: "6xl", lg: "7xl" }}
-              fontFamily="var(--font-display)"
-              fontWeight="600"
-              color="var(--text-primary)"
-              letterSpacing="-0.055em"
-              lineHeight={{ base: "1.02", md: "0.98" }}
-              textWrap="balance"
-            >
-              Building reliable systems where industrial automation, data, and AI meet.
-            </Text>
-
-            <Text
-              mt={{ base: 6, md: 8 }}
-              maxW="720px"
-              fontSize={{ base: "lg", md: "xl" }}
-              color="var(--text-secondary)"
-              lineHeight="1.7"
-            >
-              I turn complex operational problems into dependable platforms, useful data, and thoughtful software people can trust.
-            </Text>
-
-            <Flex mt={{ base: 8, md: 10 }} gap={3} align="center" flexWrap="wrap">
-              <Link
-                href="#projects"
-                display="inline-flex"
-                alignItems="center"
-                justifyContent="center"
-                minH="48px"
-                px={6}
-                bg="var(--accent-primary)"
-                color="var(--accent-contrast)"
-                border="1px solid"
-                borderColor="var(--accent-primary)"
-                borderRadius="md"
-                fontSize="sm"
-                fontWeight="600"
-                textDecoration="none"
-                transition="transform 160ms ease, opacity 160ms ease"
-                _hover={{ textDecoration: "none", transform: "translateY(-1px)", opacity: 0.9 }}
-              >
-                View selected work
-              </Link>
-              <Link
-                href="#writing"
-                display="inline-flex"
-                alignItems="center"
-                justifyContent="center"
-                minH="48px"
-                px={6}
-                color="var(--text-primary)"
-                border="1px solid"
-                borderColor="var(--border-subtle)"
-                borderRadius="md"
-                fontSize="sm"
-                fontWeight="600"
-                textDecoration="none"
-                transition="border-color 160ms ease, color 160ms ease"
-                _hover={{ textDecoration: "none", borderColor: "var(--accent-primary)", color: "var(--accent-primary)" }}
-              >
-                Read selected writing
-              </Link>
-            </Flex>
-          </Box>
-
-          <SimpleGrid
-            columns={{ base: 1, md: 3 }}
-            borderTop="1px solid"
-            borderBottom="1px solid"
-            borderColor="var(--border-subtle)"
-          >
-            {proofPoints.map((point, index) => (
-              <Box
-                key={point.label}
-                py={{ base: 5, md: 6 }}
-                px={{ base: 0, md: index === 0 ? 0 : 7 }}
-                borderTop={{ base: index === 0 ? "none" : "1px solid", md: "none" }}
-                borderLeft={{ base: "none", md: index === 0 ? "none" : "1px solid" }}
-                borderColor="var(--border-subtle)"
-              >
-                <Text
-                  fontFamily="var(--font-mono)"
-                  fontSize="10px"
-                  fontWeight="500"
-                  color="var(--text-secondary)"
-                  letterSpacing="0.1em"
-                  textTransform="uppercase"
-                  mb={1.5}
-                >
-                  {point.label}
-                </Text>
-                <Text fontSize={{ base: "md", md: "sm", lg: "md" }} color="var(--text-primary)" fontWeight="500">
-                  {point.value}
-                </Text>
-              </Box>
-            ))}
-          </SimpleGrid>
-        </VStack>
-      </Container>
-    </Box>
+    <section id="top" className="hero page-shell">
+      <div className="hero-main">
+        <p className="role-label">Senior Automation IT/OT Engineer</p>
+        <h1>
+          Building reliable systems where industrial automation, data, and AI
+          meet.
+        </h1>
+        <p className="hero-intro">
+          I turn complex operational problems into dependable platforms, useful
+          data, and thoughtful software people can trust.
+        </p>
+        <div className="hero-actions">
+          <Button asChild size="lg">
+            <a href="#projects">
+              View selected work
+              <ArrowDown data-icon="inline-end" aria-hidden="true" />
+            </a>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <a href="#writing">Read selected writing</a>
+          </Button>
+        </div>
+      </div>
+      <aside className="hero-context" aria-label="Professional focus">
+        <span className="context-mark" aria-hidden="true">
+          gc.
+        </span>
+        <dl>
+          <div>
+            <dt>Current role</dt>
+            <dd>Senior Engineer at Pfizer</dd>
+          </div>
+          <div>
+            <dt>Core focus</dt>
+            <dd>Industrial automation + IT/OT</dd>
+          </div>
+          <div>
+            <dt>Built end to end</dt>
+            <dd>AI, data + full-stack products</dd>
+          </div>
+        </dl>
+        <a href="#experience" className="text-link">
+          Explore my experience
+        </a>
+      </aside>
+    </section>
   );
 }
